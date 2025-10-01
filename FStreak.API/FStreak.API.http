@@ -1,0 +1,6 @@
+@FStreak.API_HostAddress = http://localhost:5161
+
+GET {{FStreak.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
