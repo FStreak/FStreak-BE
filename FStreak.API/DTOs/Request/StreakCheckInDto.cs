@@ -1,4 +1,4 @@
-namespace FStreak.API.DTOs
+namespace FStreak.API.DTOs.Request
 {
     public class StreakCheckInDto
     {
