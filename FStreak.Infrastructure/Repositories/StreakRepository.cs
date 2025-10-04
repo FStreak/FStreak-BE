@@ -5,7 +5,7 @@ using FStreak.Infrastructure.Data;
 
 namespace FStreak.Infrastructure.Repositories
 {
-    public class StreakRepository : BaseRepository<StreakLog>, IStreakRepository
+    public class StreakRepository : Repository<StreakLog>, IStreakRepository
     {
         public StreakRepository(FStreakDbContext context) : base(context)
         {
