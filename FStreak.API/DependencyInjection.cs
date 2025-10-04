@@ -1,8 +1,9 @@
-using Microsoft.EntityFrameworkCore;
+using FStreak.Application.Services;
 using FStreak.Domain.Interfaces;
 using FStreak.Infrastructure.Data;
 using FStreak.Infrastructure.Repositories;
-using FStreak.Application.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace FStreak.API
 {
@@ -12,7 +13,14 @@ namespace FStreak.API
         {
             // Add DbContext
             services.AddDbContext<FStreakDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options
+                //.UseSqlServer(connectionString));
+                .UseMySql( 
+                    connectionString,
+                    ServerVersion.AutoDetect(connectionString),
+                    mysqlOptions => mysqlOptions.EnableRetryOnFailure()
+                )
+            );
 
             // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();

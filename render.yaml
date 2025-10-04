@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: fstreak-api
+    runtime: docker
+    dockerfilePath: ./FStreak.API/Dockerfile
+    envVars:
+      - key: DB_SERVER
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
