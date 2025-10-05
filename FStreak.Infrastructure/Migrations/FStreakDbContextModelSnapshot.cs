@@ -22,6 +22,125 @@ namespace FStreak.Infrastructure.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("FStreak.Domain.Entities.ApplicationRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("FStreak.Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("CurrentStreak")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("LongestStreak")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
             modelBuilder.Entity("FStreak.Domain.Entities.Badge", b =>
                 {
                     b.Property<int>("BadgeId")
@@ -99,6 +218,12 @@ namespace FStreak.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ReactionId"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ApplicationUserId1")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -116,13 +241,149 @@ namespace FStreak.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId1")
+                        .HasColumnType("int");
+
                     b.HasKey("ReactionId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ApplicationUserId1");
 
                     b.HasIndex("RecipientId");
 
                     b.HasIndex("SenderId");
 
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
+
                     b.ToTable("Reactions");
+                });
+
+            modelBuilder.Entity("FStreak.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ReasonRevoked")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ReplacedByToken")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("FStreak.Domain.Entities.RoomMessage", b =>
+                {
+                    b.Property<int>("RoomMessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("RoomMessageId"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("StudyRoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("RoomMessageId");
+
+                    b.HasIndex("StudyRoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RoomMessages");
+                });
+
+            modelBuilder.Entity("FStreak.Domain.Entities.RoomUser", b =>
+                {
+                    b.Property<int>("RoomUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("RoomUserId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsOnline")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("LeftAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("StreakEarned")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("StudyRoomId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("TotalStudyTime")
+                        .HasColumnType("time(6)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("RoomUserId");
+
+                    b.HasIndex("StudyRoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RoomUsers");
                 });
 
             modelBuilder.Entity("FStreak.Domain.Entities.StreakLog", b =>
@@ -133,6 +394,9 @@ namespace FStreak.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("StreakLogId"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -142,6 +406,9 @@ namespace FStreak.Infrastructure.Migrations
                     b.Property<int>("Minutes")
                         .HasColumnType("int");
 
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -149,6 +416,8 @@ namespace FStreak.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("StreakLogId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -184,6 +453,45 @@ namespace FStreak.Infrastructure.Migrations
                     b.ToTable("StudyGroups");
                 });
 
+            modelBuilder.Entity("FStreak.Domain.Entities.StudyRoom", b =>
+                {
+                    b.Property<int>("StudyRoomId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("StudyRoomId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("InviteCode")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("StudyRoomId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.ToTable("StudyRooms");
+                });
+
             modelBuilder.Entity("FStreak.Domain.Entities.StudySession", b =>
                 {
                     b.Property<int>("StudySessionId")
@@ -191,6 +499,9 @@ namespace FStreak.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("StudySessionId"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -218,6 +529,8 @@ namespace FStreak.Infrastructure.Migrations
 
                     b.HasKey("StudySessionId");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("StudyGroupId");
 
                     b.HasIndex("SubjectId");
@@ -234,6 +547,9 @@ namespace FStreak.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("StudyWallPostId"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Caption")
                         .IsRequired()
@@ -258,6 +574,8 @@ namespace FStreak.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("StudyWallPostId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -336,7 +654,7 @@ namespace FStreak.Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("FStreak.Domain.Entities.UserBadge", b =>
@@ -346,6 +664,9 @@ namespace FStreak.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("UserBadgeId"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("BadgeId")
                         .HasColumnType("int");
@@ -364,6 +685,8 @@ namespace FStreak.Infrastructure.Migrations
 
                     b.HasKey("UserBadgeId");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("BadgeId");
 
                     b.HasIndex("UserId");
@@ -378,6 +701,9 @@ namespace FStreak.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("UserChallengeId"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("ChallengeId")
                         .HasColumnType("int");
@@ -404,6 +730,8 @@ namespace FStreak.Infrastructure.Migrations
 
                     b.HasKey("UserChallengeId");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("ChallengeId");
 
                     b.HasIndex("UserId");
@@ -418,6 +746,12 @@ namespace FStreak.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("UserFriendId"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ApplicationUserId1")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -436,36 +770,225 @@ namespace FStreak.Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserId1")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId2")
+                        .HasColumnType("int");
+
                     b.HasKey("UserFriendId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ApplicationUserId1");
 
                     b.HasIndex("FriendId");
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("UserId1");
+
+                    b.HasIndex("UserId2");
+
                     b.ToTable("UserFriends");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("FStreak.Domain.Entities.Reaction", b =>
                 {
-                    b.HasOne("FStreak.Domain.Entities.User", "Recipient")
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
                         .WithMany("ReceivedReactions")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                        .WithMany("SentReactions")
+                        .HasForeignKey("ApplicationUserId1");
+
+                    b.HasOne("FStreak.Domain.Entities.User", "Recipient")
+                        .WithMany()
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FStreak.Domain.Entities.User", "Sender")
-                        .WithMany("SentReactions")
+                        .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("FStreak.Domain.Entities.User", null)
+                        .WithMany("ReceivedReactions")
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("FStreak.Domain.Entities.User", null)
+                        .WithMany("SentReactions")
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("Recipient");
 
                     b.Navigation("Sender");
                 });
 
+            modelBuilder.Entity("FStreak.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FStreak.Domain.Entities.RoomMessage", b =>
+                {
+                    b.HasOne("FStreak.Domain.Entities.StudyRoom", "Room")
+                        .WithMany("Messages")
+                        .HasForeignKey("StudyRoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FStreak.Domain.Entities.RoomUser", b =>
+                {
+                    b.HasOne("FStreak.Domain.Entities.StudyRoom", "Room")
+                        .WithMany("RoomUsers")
+                        .HasForeignKey("StudyRoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FStreak.Domain.Entities.StreakLog", b =>
                 {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                        .WithMany("StreakLogs")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("FStreak.Domain.Entities.User", "User")
                         .WithMany("StreakLogs")
                         .HasForeignKey("UserId")
@@ -475,8 +998,23 @@ namespace FStreak.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FStreak.Domain.Entities.StudyRoom", b =>
+                {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+                });
+
             modelBuilder.Entity("FStreak.Domain.Entities.StudySession", b =>
                 {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                        .WithMany("StudySessions")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("FStreak.Domain.Entities.StudyGroup", "StudyGroup")
                         .WithMany()
                         .HasForeignKey("StudyGroupId")
@@ -504,6 +1042,10 @@ namespace FStreak.Infrastructure.Migrations
 
             modelBuilder.Entity("FStreak.Domain.Entities.StudyWallPost", b =>
                 {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                        .WithMany("StudyWallPosts")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("FStreak.Domain.Entities.User", "User")
                         .WithMany("StudyWallPosts")
                         .HasForeignKey("UserId")
@@ -515,6 +1057,10 @@ namespace FStreak.Infrastructure.Migrations
 
             modelBuilder.Entity("FStreak.Domain.Entities.UserBadge", b =>
                 {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                        .WithMany("UserBadges")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("FStreak.Domain.Entities.Badge", "Badge")
                         .WithMany()
                         .HasForeignKey("BadgeId")
@@ -534,6 +1080,10 @@ namespace FStreak.Infrastructure.Migrations
 
             modelBuilder.Entity("FStreak.Domain.Entities.UserChallenge", b =>
                 {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                        .WithMany("UserChallenges")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("FStreak.Domain.Entities.Challenge", "Challenge")
                         .WithMany()
                         .HasForeignKey("ChallengeId")
@@ -553,21 +1103,118 @@ namespace FStreak.Infrastructure.Migrations
 
             modelBuilder.Entity("FStreak.Domain.Entities.UserFriend", b =>
                 {
-                    b.HasOne("FStreak.Domain.Entities.User", "Friend")
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
                         .WithMany("FriendOf")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                        .WithMany("Friends")
+                        .HasForeignKey("ApplicationUserId1");
+
+                    b.HasOne("FStreak.Domain.Entities.User", "Friend")
+                        .WithMany()
                         .HasForeignKey("FriendId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FStreak.Domain.Entities.User", "User")
-                        .WithMany("Friends")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("FStreak.Domain.Entities.User", null)
+                        .WithMany("FriendOf")
+                        .HasForeignKey("UserId1");
+
+                    b.HasOne("FStreak.Domain.Entities.User", null)
+                        .WithMany("Friends")
+                        .HasForeignKey("UserId2");
+
                     b.Navigation("Friend");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FStreak.Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Navigation("FriendOf");
+
+                    b.Navigation("Friends");
+
+                    b.Navigation("ReceivedReactions");
+
+                    b.Navigation("RefreshTokens");
+
+                    b.Navigation("SentReactions");
+
+                    b.Navigation("StreakLogs");
+
+                    b.Navigation("StudySessions");
+
+                    b.Navigation("StudyWallPosts");
+
+                    b.Navigation("UserBadges");
+
+                    b.Navigation("UserChallenges");
+                });
+
+            modelBuilder.Entity("FStreak.Domain.Entities.StudyRoom", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("RoomUsers");
                 });
 
             modelBuilder.Entity("FStreak.Domain.Entities.User", b =>

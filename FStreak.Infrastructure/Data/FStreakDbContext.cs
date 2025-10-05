@@ -90,26 +90,30 @@ namespace FStreak.Infrastructure.Data
             // Configure UserFriend relationships
             modelBuilder.Entity<UserFriend>()
                 .HasOne(uf => uf.User)
-                .WithMany(u => u.Friends)
+                //.WithMany(u => u.Friends)
+                .WithMany()
                 .HasForeignKey(uf => uf.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserFriend>()
                 .HasOne(uf => uf.Friend)
-                .WithMany(u => u.FriendOf)
+                //.WithMany(u => u.FriendOf)
+                .WithMany()
                 .HasForeignKey(uf => uf.FriendId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Configure Reaction relationships
             modelBuilder.Entity<Reaction>()
                 .HasOne(r => r.Sender)
-                .WithMany(u => u.SentReactions)
+                //.WithMany(u => u.SentReactions)
+                .WithMany()
                 .HasForeignKey(r => r.SenderId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Reaction>()
                 .HasOne(r => r.Recipient)
-                .WithMany(u => u.ReceivedReactions)
+                //.WithMany(u => u.ReceivedReactions)
+                .WithMany()
                 .HasForeignKey(r => r.RecipientId)
                 .OnDelete(DeleteBehavior.Restrict);
 

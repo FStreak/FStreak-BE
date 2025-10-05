@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FStreak.Application.Services
+namespace FStreak.Application.Services.Implementation
 {
     public interface IUserService
     {

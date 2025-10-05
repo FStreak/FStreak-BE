@@ -1,4 +1,4 @@
-﻿using FStreak.Application.Services;
+﻿using FStreak.Application.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FStreak.API.Controllers
