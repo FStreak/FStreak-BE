@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FStreak.Domain.Common;
@@ -10,8 +9,14 @@ namespace FStreak.Domain.Entities
         [Key]
         public int StreakLogId { get; set; }
 
+
         [Required]
         public int UserId { get; set; }
+
+        /// <summary>
+        /// RoomId nơi user thực hiện streak (0 nếu check-in thủ công)
+        /// </summary>
+        public int RoomId { get; set; }
 
         [Required]
         public DateTime Date { get; set; }

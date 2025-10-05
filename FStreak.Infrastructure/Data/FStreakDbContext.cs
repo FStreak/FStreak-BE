@@ -1,16 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using FStreak.Domain.Entities;
 
 namespace FStreak.Infrastructure.Data
 {
-    public class FStreakDbContext : DbContext
+    public class FStreakDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public FStreakDbContext(DbContextOptions<FStreakDbContext> options)
             : base(options)
         {
         }
 
-        public DbSet<User> Users { get; set; }
         public DbSet<StreakLog> StreakLogs { get; set; }
         public DbSet<StudyGroup> StudyGroups { get; set; }
         public DbSet<StudySession> StudySessions { get; set; }
@@ -18,10 +18,14 @@ namespace FStreak.Infrastructure.Data
         public DbSet<Challenge> Challenges { get; set; }
         public DbSet<UserChallenge> UserChallenges { get; set; }
         public DbSet<Badge> Badges { get; set; }
+        public DbSet<StudyRoom> StudyRooms { get; set; }
+        public DbSet<RoomUser> RoomUsers { get; set; }
+        public DbSet<RoomMessage> RoomMessages { get; set; }
         public DbSet<UserBadge> UserBadges { get; set; }
         public DbSet<StudyWallPost> StudyWallPosts { get; set; }
         public DbSet<UserFriend> UserFriends { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
