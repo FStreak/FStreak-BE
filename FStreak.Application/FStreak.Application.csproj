@@ -2,6 +2,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FStreak.Domain\FStreak.Domain.csproj" />
+    <ProjectReference Include="..\FStreak.Infrastructure\FStreak.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
   </ItemGroup>
 
   <PropertyGroup>

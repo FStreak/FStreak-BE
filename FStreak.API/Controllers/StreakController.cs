@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using FStreak.Application.Services;
+using FStreak.Application.Services.Interface;
+using FStreak.Application.Services.Implementation;
 
 namespace FStreak.API.Controllers
 {
@@ -17,8 +18,7 @@ namespace FStreak.API.Controllers
         [HttpPost("checkin")]
         public async Task<IActionResult> CheckIn([FromQuery] int userId)
         {
-            var (success, currentStreak, longestStreak) = await _streakService.CheckInAsync(userId);
-            
+            var (success, currentStreak, longestStreak) = await _streakService.CheckInAsync(userId.ToString());
             if (!success)
             {
                 return BadRequest(new { 
@@ -26,7 +26,6 @@ namespace FStreak.API.Controllers
                     message = "Already checked in today or user not found" 
                 });
             }
-
             return Ok(new
             {
                 success = true,
@@ -38,14 +37,14 @@ namespace FStreak.API.Controllers
         [HttpGet("{userId}/current")]
         public async Task<IActionResult> GetCurrentStreak(int userId)
         {
-            var streak = await _streakService.GetCurrentStreakAsync(userId);
+            var streak = await _streakService.GetCurrentStreakAsync(userId.ToString());
             return Ok(new { currentStreak = streak });
         }
 
         [HttpGet("{userId}/longest")]
         public async Task<IActionResult> GetLongestStreak(int userId)
         {
-            var streak = await _streakService.GetLongestStreakAsync(userId);
+            var streak = await _streakService.GetLongestStreakAsync(userId.ToString());
             return Ok(new { longestStreak = streak });
         }
     }
