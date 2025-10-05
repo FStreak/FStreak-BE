@@ -224,9 +224,5 @@ catch (Exception ex)
     Console.WriteLine($"Error initializing roles: {ex.Message}");
 }
 
-<<<<<<< HEAD
-app.Run();
-=======
 // Start the app
 app.Run();
->>>>>>> a71ebab28a4a4de5d11d26f04ce56af707877c1a
