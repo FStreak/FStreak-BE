@@ -1,10 +1,12 @@
-using FStreak.Domain.Entities;
+﻿using FStreak.Domain.Entities;
+using System;
+using System.Threading.Tasks;
 
 namespace FStreak.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<User> Users { get; }
+        IRepository<ApplicationUser> Users { get; }
         IRepository<StreakLog> StreakLogs { get; }
         IRepository<StudyGroup> StudyGroups { get; }
         IRepository<StudySession> StudySessions { get; }
@@ -16,6 +18,12 @@ namespace FStreak.Domain.Interfaces
         IRepository<StudyWallPost> StudyWallPosts { get; }
         IRepository<UserFriend> UserFriends { get; }
         IRepository<Reaction> Reactions { get; }
+
+        // Thêm các repository mới
+        IRepository<StudyRoom> StudyRooms { get; }
+        IRepository<RoomUser> RoomUsers { get; }
+        IRepository<RoomMessage> RoomMessages { get; }
+        IRepository<RefreshToken> RefreshTokens { get; }
 
         Task<int> SaveChangesAsync();
     }

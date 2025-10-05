@@ -11,13 +11,13 @@ namespace FStreak.Infrastructure.Repositories
         {
         }
 
-        public async Task<StreakLog> GetUserStreakForDateAsync(int userId, DateTime date)
+        public async Task<StreakLog> GetUserStreakForDateAsync(string userId, DateTime date)
         {
             return await _dbSet
                 .FirstOrDefaultAsync(s => s.UserId == userId && s.Date.Date == date.Date);
         }
 
-        public async Task<int> GetCurrentStreakAsync(int userId)
+        public async Task<int> GetCurrentStreakAsync(string userId)
         {
             var lastStreak = await _dbSet
                 .Where(s => s.UserId == userId)
@@ -45,7 +45,7 @@ namespace FStreak.Infrastructure.Repositories
             return streakCount;
         }
 
-        public async Task<int> GetLongestStreakAsync(int userId)
+        public async Task<int> GetLongestStreakAsync(string userId)
         {
             var streaks = await _dbSet
                 .Where(s => s.UserId == userId)
