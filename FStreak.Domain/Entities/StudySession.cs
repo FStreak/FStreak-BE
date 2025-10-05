@@ -14,7 +14,7 @@ namespace FStreak.Domain.Entities
         public int StudyGroupId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         public int SubjectId { get; set; }
@@ -31,7 +31,7 @@ namespace FStreak.Domain.Entities
         public virtual StudyGroup StudyGroup { get; set; }
 
         [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
         [ForeignKey("SubjectId")]
         public virtual Subject Subject { get; set; }

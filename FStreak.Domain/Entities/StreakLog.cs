@@ -11,7 +11,7 @@ namespace FStreak.Domain.Entities
 
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         /// <summary>
         /// RoomId nơi user thực hiện streak (0 nếu check-in thủ công)
@@ -26,6 +26,6 @@ namespace FStreak.Domain.Entities
 
         // Navigation property
         [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public virtual ApplicationUser User { get; set; }
     }
 }

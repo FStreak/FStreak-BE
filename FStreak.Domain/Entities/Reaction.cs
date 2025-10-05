@@ -10,10 +10,10 @@ namespace FStreak.Domain.Entities
         public int ReactionId { get; set; }
 
         [Required]
-        public int SenderId { get; set; }
+        public string SenderId { get; set; }
 
         [Required]
-        public int RecipientId { get; set; }
+        public string RecipientId { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -21,9 +21,9 @@ namespace FStreak.Domain.Entities
 
         // Navigation properties
         [ForeignKey("SenderId")]
-        public virtual User Sender { get; set; }
+        public virtual ApplicationUser Sender { get; set; }
 
         [ForeignKey("RecipientId")]
-        public virtual User Recipient { get; set; }
+        public virtual ApplicationUser Recipient { get; set; }
     }
 }

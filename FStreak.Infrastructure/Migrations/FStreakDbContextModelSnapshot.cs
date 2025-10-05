@@ -218,20 +218,16 @@ namespace FStreak.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ReactionId"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("ApplicationUserId1")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("RecipientId")
-                        .HasColumnType("int");
+                    b.Property<string>("RecipientId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("SenderId")
-                        .HasColumnType("int");
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -241,25 +237,11 @@ namespace FStreak.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId1")
-                        .HasColumnType("int");
-
                     b.HasKey("ReactionId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("ApplicationUserId1");
 
                     b.HasIndex("RecipientId");
 
                     b.HasIndex("SenderId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Reactions");
                 });
@@ -394,9 +376,6 @@ namespace FStreak.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("StreakLogId"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -412,12 +391,11 @@ namespace FStreak.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("StreakLogId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -500,9 +478,6 @@ namespace FStreak.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("StudySessionId"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -524,12 +499,11 @@ namespace FStreak.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("StudySessionId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("StudyGroupId");
 
@@ -547,9 +521,6 @@ namespace FStreak.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("StudyWallPostId"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Caption")
                         .IsRequired()
@@ -570,12 +541,11 @@ namespace FStreak.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("StudyWallPostId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -614,49 +584,6 @@ namespace FStreak.Infrastructure.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("FStreak.Domain.Entities.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("UserId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("CurrentStreak")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int>("LongestStreak")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("User");
-                });
-
             modelBuilder.Entity("FStreak.Domain.Entities.UserBadge", b =>
                 {
                     b.Property<int>("UserBadgeId")
@@ -664,9 +591,6 @@ namespace FStreak.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("UserBadgeId"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("BadgeId")
                         .HasColumnType("int");
@@ -680,12 +604,11 @@ namespace FStreak.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("UserBadgeId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("BadgeId");
 
@@ -701,9 +624,6 @@ namespace FStreak.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("UserChallengeId"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("ChallengeId")
                         .HasColumnType("int");
@@ -725,12 +645,11 @@ namespace FStreak.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("UserChallengeId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ChallengeId");
 
@@ -747,17 +666,12 @@ namespace FStreak.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("UserFriendId"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("ApplicationUserId1")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("FriendId")
-                        .HasColumnType("int");
+                    b.Property<string>("FriendId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -767,28 +681,15 @@ namespace FStreak.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId1")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId2")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("UserFriendId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("ApplicationUserId1");
 
                     b.HasIndex("FriendId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
-
-                    b.HasIndex("UserId2");
 
                     b.ToTable("UserFriends");
                 });
@@ -901,33 +802,17 @@ namespace FStreak.Infrastructure.Migrations
 
             modelBuilder.Entity("FStreak.Domain.Entities.Reaction", b =>
                 {
-                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "Recipient")
                         .WithMany("ReceivedReactions")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
-                        .WithMany("SentReactions")
-                        .HasForeignKey("ApplicationUserId1");
-
-                    b.HasOne("FStreak.Domain.Entities.User", "Recipient")
-                        .WithMany()
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FStreak.Domain.Entities.User", "Sender")
-                        .WithMany()
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "Sender")
+                        .WithMany("SentReactions")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("FStreak.Domain.Entities.User", null)
-                        .WithMany("ReceivedReactions")
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("FStreak.Domain.Entities.User", null)
-                        .WithMany("SentReactions")
-                        .HasForeignKey("UserId1");
 
                     b.Navigation("Recipient");
 
@@ -985,11 +870,7 @@ namespace FStreak.Infrastructure.Migrations
 
             modelBuilder.Entity("FStreak.Domain.Entities.StreakLog", b =>
                 {
-                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
-                        .WithMany("StreakLogs")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("FStreak.Domain.Entities.User", "User")
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "User")
                         .WithMany("StreakLogs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1003,7 +884,7 @@ namespace FStreak.Infrastructure.Migrations
                     b.HasOne("FStreak.Domain.Entities.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
@@ -1011,10 +892,6 @@ namespace FStreak.Infrastructure.Migrations
 
             modelBuilder.Entity("FStreak.Domain.Entities.StudySession", b =>
                 {
-                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
-                        .WithMany("StudySessions")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("FStreak.Domain.Entities.StudyGroup", "StudyGroup")
                         .WithMany()
                         .HasForeignKey("StudyGroupId")
@@ -1027,7 +904,7 @@ namespace FStreak.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FStreak.Domain.Entities.User", "User")
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "User")
                         .WithMany("StudySessions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1042,11 +919,7 @@ namespace FStreak.Infrastructure.Migrations
 
             modelBuilder.Entity("FStreak.Domain.Entities.StudyWallPost", b =>
                 {
-                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
-                        .WithMany("StudyWallPosts")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("FStreak.Domain.Entities.User", "User")
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "User")
                         .WithMany("StudyWallPosts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1057,17 +930,13 @@ namespace FStreak.Infrastructure.Migrations
 
             modelBuilder.Entity("FStreak.Domain.Entities.UserBadge", b =>
                 {
-                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
-                        .WithMany("UserBadges")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("FStreak.Domain.Entities.Badge", "Badge")
                         .WithMany()
                         .HasForeignKey("BadgeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FStreak.Domain.Entities.User", "User")
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "User")
                         .WithMany("UserBadges")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1080,17 +949,13 @@ namespace FStreak.Infrastructure.Migrations
 
             modelBuilder.Entity("FStreak.Domain.Entities.UserChallenge", b =>
                 {
-                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
-                        .WithMany("UserChallenges")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("FStreak.Domain.Entities.Challenge", "Challenge")
                         .WithMany()
                         .HasForeignKey("ChallengeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FStreak.Domain.Entities.User", "User")
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "User")
                         .WithMany("UserChallenges")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1103,33 +968,17 @@ namespace FStreak.Infrastructure.Migrations
 
             modelBuilder.Entity("FStreak.Domain.Entities.UserFriend", b =>
                 {
-                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "Friend")
                         .WithMany("FriendOf")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", null)
-                        .WithMany("Friends")
-                        .HasForeignKey("ApplicationUserId1");
-
-                    b.HasOne("FStreak.Domain.Entities.User", "Friend")
-                        .WithMany()
                         .HasForeignKey("FriendId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FStreak.Domain.Entities.User", "User")
-                        .WithMany()
+                    b.HasOne("FStreak.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Friends")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("FStreak.Domain.Entities.User", null)
-                        .WithMany("FriendOf")
-                        .HasForeignKey("UserId1");
-
-                    b.HasOne("FStreak.Domain.Entities.User", null)
-                        .WithMany("Friends")
-                        .HasForeignKey("UserId2");
 
                     b.Navigation("Friend");
 
@@ -1215,27 +1064,6 @@ namespace FStreak.Infrastructure.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("RoomUsers");
-                });
-
-            modelBuilder.Entity("FStreak.Domain.Entities.User", b =>
-                {
-                    b.Navigation("FriendOf");
-
-                    b.Navigation("Friends");
-
-                    b.Navigation("ReceivedReactions");
-
-                    b.Navigation("SentReactions");
-
-                    b.Navigation("StreakLogs");
-
-                    b.Navigation("StudySessions");
-
-                    b.Navigation("StudyWallPosts");
-
-                    b.Navigation("UserBadges");
-
-                    b.Navigation("UserChallenges");
                 });
 #pragma warning restore 612, 618
         }

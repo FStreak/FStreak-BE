@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FStreak.Domain.Common;
 
@@ -10,10 +10,10 @@ namespace FStreak.Domain.Entities
         public int UserFriendId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
-        public int FriendId { get; set; }
+        public string FriendId { get; set; }
 
         [Required]
         [MaxLength(20)]
@@ -21,9 +21,9 @@ namespace FStreak.Domain.Entities
 
         // Navigation properties
         [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
         [ForeignKey("FriendId")]
-        public virtual User Friend { get; set; }
+        public virtual ApplicationUser Friend { get; set; }
     }
 }

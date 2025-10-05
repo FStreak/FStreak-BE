@@ -161,29 +161,6 @@ namespace FStreak.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Email = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Username = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Password = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CurrentStreak = table.Column<int>(type: "int", nullable: false),
-                    LongestStreak = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.UserId);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -311,6 +288,39 @@ namespace FStreak.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Reactions",
+                columns: table => new
+                {
+                    ReactionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    SenderId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RecipientId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Type = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reactions", x => x.ReactionId);
+                    table.ForeignKey(
+                        name: "FK_Reactions_AspNetUsers_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reactions_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "RefreshTokens",
                 columns: table => new
                 {
@@ -333,6 +343,32 @@ namespace FStreak.Infrastructure.Migrations
                     table.PrimaryKey("PK_RefreshTokens", x => x.Id);
                     table.ForeignKey(
                         name: "FK_RefreshTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "StreakLogs",
+                columns: table => new
+                {
+                    StreakLogId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RoomId = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Minutes = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StreakLogs", x => x.StreakLogId);
+                    table.ForeignKey(
+                        name: "FK_StreakLogs_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -366,96 +402,133 @@ namespace FStreak.Infrastructure.Migrations
                         column: x => x.CreatedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Reactions",
+                name: "StudyWallPosts",
                 columns: table => new
                 {
-                    ReactionId = table.Column<int>(type: "int", nullable: false)
+                    StudyWallPostId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    SenderId = table.Column<int>(type: "int", nullable: false),
-                    RecipientId = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ApplicationUserId = table.Column<string>(type: "varchar(255)", nullable: true)
+                    ImageUrl = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ApplicationUserId1 = table.Column<string>(type: "varchar(255)", nullable: true)
+                    Caption = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserId = table.Column<int>(type: "int", nullable: true),
-                    UserId1 = table.Column<int>(type: "int", nullable: true),
+                    StudyMinutes = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reactions", x => x.ReactionId);
+                    table.PrimaryKey("PK_StudyWallPosts", x => x.StudyWallPostId);
                     table.ForeignKey(
-                        name: "FK_Reactions_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Reactions_AspNetUsers_ApplicationUserId1",
-                        column: x => x.ApplicationUserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Reactions_User_RecipientId",
-                        column: x => x.RecipientId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Reactions_User_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Reactions_User_UserId",
+                        name: "FK_StudyWallPosts_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId");
-                    table.ForeignKey(
-                        name: "FK_Reactions_User_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "User",
-                        principalColumn: "UserId");
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "StreakLogs",
+                name: "UserFriends",
                 columns: table => new
                 {
-                    StreakLogId = table.Column<int>(type: "int", nullable: false)
+                    UserFriendId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RoomId = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Minutes = table.Column<int>(type: "int", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "varchar(255)", nullable: true)
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FriendId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Status = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StreakLogs", x => x.StreakLogId);
+                    table.PrimaryKey("PK_UserFriends", x => x.UserFriendId);
                     table.ForeignKey(
-                        name: "FK_StreakLogs_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_UserFriends_AspNetUsers_FriendId",
+                        column: x => x.FriendId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_StreakLogs_User_UserId",
+                        name: "FK_UserFriends_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "UserBadges",
+                columns: table => new
+                {
+                    UserBadgeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BadgeId = table.Column<int>(type: "int", nullable: false),
+                    EarnedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserBadges", x => x.UserBadgeId);
+                    table.ForeignKey(
+                        name: "FK_UserBadges_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserBadges_Badges_BadgeId",
+                        column: x => x.BadgeId,
+                        principalTable: "Badges",
+                        principalColumn: "BadgeId",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "UserChallenges",
+                columns: table => new
+                {
+                    UserChallengeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ChallengeId = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CompletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Status = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserChallenges", x => x.UserChallengeId);
+                    table.ForeignKey(
+                        name: "FK_UserChallenges_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserChallenges_Challenges_ChallengeId",
+                        column: x => x.ChallengeId,
+                        principalTable: "Challenges",
+                        principalColumn: "ChallengeId",
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -466,13 +539,12 @@ namespace FStreak.Infrastructure.Migrations
                     StudySessionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     StudyGroupId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     SubjectId = table.Column<int>(type: "int", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     PomodoroCount = table.Column<int>(type: "int", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
@@ -480,10 +552,11 @@ namespace FStreak.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_StudySessions", x => x.StudySessionId);
                     table.ForeignKey(
-                        name: "FK_StudySessions_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_StudySessions_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_StudySessions_StudyGroups_StudyGroupId",
                         column: x => x.StudyGroupId,
@@ -496,180 +569,6 @@ namespace FStreak.Infrastructure.Migrations
                         principalTable: "Subjects",
                         principalColumn: "SubjectId",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_StudySessions_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "StudyWallPosts",
-                columns: table => new
-                {
-                    StudyWallPostId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ImageUrl = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Caption = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    StudyMinutes = table.Column<int>(type: "int", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StudyWallPosts", x => x.StudyWallPostId);
-                    table.ForeignKey(
-                        name: "FK_StudyWallPosts_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_StudyWallPosts_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "UserBadges",
-                columns: table => new
-                {
-                    UserBadgeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    BadgeId = table.Column<int>(type: "int", nullable: false),
-                    EarnedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserBadges", x => x.UserBadgeId);
-                    table.ForeignKey(
-                        name: "FK_UserBadges_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserBadges_Badges_BadgeId",
-                        column: x => x.BadgeId,
-                        principalTable: "Badges",
-                        principalColumn: "BadgeId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_UserBadges_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "UserChallenges",
-                columns: table => new
-                {
-                    UserChallengeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ChallengeId = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CompletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Status = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ApplicationUserId = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserChallenges", x => x.UserChallengeId);
-                    table.ForeignKey(
-                        name: "FK_UserChallenges_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserChallenges_Challenges_ChallengeId",
-                        column: x => x.ChallengeId,
-                        principalTable: "Challenges",
-                        principalColumn: "ChallengeId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_UserChallenges_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "UserFriends",
-                columns: table => new
-                {
-                    UserFriendId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    FriendId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ApplicationUserId = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ApplicationUserId1 = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserId1 = table.Column<int>(type: "int", nullable: true),
-                    UserId2 = table.Column<int>(type: "int", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserFriends", x => x.UserFriendId);
-                    table.ForeignKey(
-                        name: "FK_UserFriends_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserFriends_AspNetUsers_ApplicationUserId1",
-                        column: x => x.ApplicationUserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserFriends_User_FriendId",
-                        column: x => x.FriendId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_UserFriends_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_UserFriends_User_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "User",
-                        principalColumn: "UserId");
-                    table.ForeignKey(
-                        name: "FK_UserFriends_User_UserId2",
-                        column: x => x.UserId2,
-                        principalTable: "User",
-                        principalColumn: "UserId");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -779,16 +678,6 @@ namespace FStreak.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reactions_ApplicationUserId",
-                table: "Reactions",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reactions_ApplicationUserId1",
-                table: "Reactions",
-                column: "ApplicationUserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reactions_RecipientId",
                 table: "Reactions",
                 column: "RecipientId");
@@ -797,16 +686,6 @@ namespace FStreak.Infrastructure.Migrations
                 name: "IX_Reactions_SenderId",
                 table: "Reactions",
                 column: "SenderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reactions_UserId",
-                table: "Reactions",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reactions_UserId1",
-                table: "Reactions",
-                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_UserId",
@@ -834,11 +713,6 @@ namespace FStreak.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StreakLogs_ApplicationUserId",
-                table: "StreakLogs",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_StreakLogs_UserId",
                 table: "StreakLogs",
                 column: "UserId");
@@ -847,11 +721,6 @@ namespace FStreak.Infrastructure.Migrations
                 name: "IX_StudyRooms_CreatedById",
                 table: "StudyRooms",
                 column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StudySessions_ApplicationUserId",
-                table: "StudySessions",
-                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudySessions_StudyGroupId",
@@ -869,11 +738,6 @@ namespace FStreak.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudyWallPosts_ApplicationUserId",
-                table: "StudyWallPosts",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_StudyWallPosts_UserId",
                 table: "StudyWallPosts",
                 column: "UserId");
@@ -883,17 +747,6 @@ namespace FStreak.Infrastructure.Migrations
                 table: "Subjects",
                 column: "Code",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_Email",
-                table: "User",
-                column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserBadges_ApplicationUserId",
-                table: "UserBadges",
-                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserBadges_BadgeId",
@@ -906,11 +759,6 @@ namespace FStreak.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserChallenges_ApplicationUserId",
-                table: "UserChallenges",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserChallenges_ChallengeId",
                 table: "UserChallenges",
                 column: "ChallengeId");
@@ -921,16 +769,6 @@ namespace FStreak.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserFriends_ApplicationUserId",
-                table: "UserFriends",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserFriends_ApplicationUserId1",
-                table: "UserFriends",
-                column: "ApplicationUserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserFriends_FriendId",
                 table: "UserFriends",
                 column: "FriendId");
@@ -939,16 +777,6 @@ namespace FStreak.Infrastructure.Migrations
                 name: "IX_UserFriends_UserId",
                 table: "UserFriends",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserFriends_UserId1",
-                table: "UserFriends",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserFriends_UserId2",
-                table: "UserFriends",
-                column: "UserId2");
         }
 
         /// <inheritdoc />
@@ -1016,9 +844,6 @@ namespace FStreak.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Challenges");
-
-            migrationBuilder.DropTable(
-                name: "User");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

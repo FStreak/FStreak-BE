@@ -1,4 +1,5 @@
-﻿using FStreak.Domain.Entities;
+﻿using FStreak.Application.Services.Interface;
+using FStreak.Domain.Entities;
 using FStreak.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,6 @@ using System.Threading.Tasks;
 
 namespace FStreak.Application.Services.Implementation
 {
-    public interface IUserService
-    {
-        Task<IEnumerable<User>> GetAllAsync();
-    }
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -20,9 +17,9 @@ namespace FStreak.Application.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<ApplicationUser>> GetAllAsync()
         {
-            return await _unitOfWork.Users.GetAllAsync();
+             return await _unitOfWork.Users.GetAllAsync();
         }
     }
 }
