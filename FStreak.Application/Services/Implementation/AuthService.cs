@@ -253,7 +253,9 @@ namespace FStreak.Application.Services.Implementation
                 UserId = userId,
                 Token = token,
                 CreatedAt = DateTime.UtcNow,
-                ExpiryDate = DateTime.UtcNow.AddDays(7) // Refresh token valid for 7 days
+                ExpiryDate = DateTime.UtcNow.AddDays(7), // Refresh token valid for 7 days
+                ReasonRevoked = string.Empty,
+                ReplacedByToken = string.Empty
             };
 
             _context.RefreshTokens.Add(refreshToken);

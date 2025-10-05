@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FStreak.Infrastructure.Repositories
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class UserRepository : Repository<ApplicationUser>, IUserRepository
     {
         public UserRepository(FStreakDbContext context) : base(context)
         {

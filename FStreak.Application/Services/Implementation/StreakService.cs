@@ -103,7 +103,7 @@ namespace FStreak.Application.Services.Implementation
         {
             try
             {
-                var user = await _unitOfWork.Users.FindAsync(u => u.UserId.ToString() == userId);
+                var user = await _unitOfWork.Users.FindAsync(u => u.Id == userId);
                 var userEntity = user.FirstOrDefault();
                 if (userEntity == null)
                     throw new Exception($"User {userId} not found");
@@ -127,7 +127,7 @@ namespace FStreak.Application.Services.Implementation
 
                 var streakLog = new StreakLog
                 {
-                    UserId = int.Parse(userId),
+                    UserId = userId,
                     Date = today,
                     Minutes = RequiredMinutes
                 };
@@ -148,7 +148,7 @@ namespace FStreak.Application.Services.Implementation
         /// </summary>
         public async Task<(bool success, int currentStreak, int longestStreak)> CheckInAsync(string userId)
         {
-            var user = (await _unitOfWork.Users.FindAsync(u => u.UserId.ToString() == userId)).FirstOrDefault();
+            var user = (await _unitOfWork.Users.FindAsync(u => u.Id == userId)).FirstOrDefault();
             if (user == null) return (false, 0, 0);
             var today = DateTime.UtcNow.Date;
             var hasCheckedIn = (await _unitOfWork.StreakLogs.FindAsync(s =>
@@ -164,7 +164,7 @@ namespace FStreak.Application.Services.Implementation
         /// </summary>
         public async Task<int> GetCurrentStreakAsync(string userId)
         {
-            var user = (await _unitOfWork.Users.FindAsync(u => u.UserId.ToString() == userId)).FirstOrDefault();
+            var user = (await _unitOfWork.Users.FindAsync(u => u.Id.ToString() == userId)).FirstOrDefault();
             return user?.CurrentStreak ?? 0;
         }
 
@@ -173,7 +173,7 @@ namespace FStreak.Application.Services.Implementation
         /// </summary>
         public async Task<int> GetLongestStreakAsync(string userId)
         {
-            var user = (await _unitOfWork.Users.FindAsync(u => u.UserId.ToString() == userId)).FirstOrDefault();
+            var user = (await _unitOfWork.Users.FindAsync(u => u.Id.ToString() == userId)).FirstOrDefault();
             return user?.LongestStreak ?? 0;
         }
     }

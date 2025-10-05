@@ -11,7 +11,7 @@ namespace FStreak.Domain.Entities
         public int UserChallengeId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         public int ChallengeId { get; set; }
@@ -27,7 +27,7 @@ namespace FStreak.Domain.Entities
 
         // Navigation properties
         [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
         [ForeignKey("ChallengeId")]
         public virtual Challenge Challenge { get; set; }

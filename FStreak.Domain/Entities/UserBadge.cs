@@ -11,7 +11,7 @@ namespace FStreak.Domain.Entities
         public int UserBadgeId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         public int BadgeId { get; set; }
@@ -21,7 +21,7 @@ namespace FStreak.Domain.Entities
 
         // Navigation properties
         [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
         [ForeignKey("BadgeId")]
         public virtual Badge Badge { get; set; }

@@ -31,16 +31,12 @@ namespace FStreak.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure User entity
-            modelBuilder.Entity<User>()
+            // Configure ApplicationUser entity
+            modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.StreakLogs)
                 .WithOne(s => s.User)
                 .HasForeignKey(s => s.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
 
             // Configure StudySession relationships
             modelBuilder.Entity<StudySession>()
@@ -119,6 +115,20 @@ namespace FStreak.Infrastructure.Data
                 .WithMany(u => u.StudyWallPosts)
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure RefreshToken relationships
+            modelBuilder.Entity<RefreshToken>()
+                .HasOne(rt => rt.User)
+                .WithMany(u => u.RefreshTokens)
+                .HasForeignKey(rt => rt.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure StudyRoom relationships
+            modelBuilder.Entity<StudyRoom>()
+                .HasOne(sr => sr.CreatedBy)
+                .WithMany()
+                .HasForeignKey(sr => sr.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Configure unique constraints
             modelBuilder.Entity<Subject>()
