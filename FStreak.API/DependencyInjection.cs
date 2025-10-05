@@ -4,6 +4,8 @@ using FStreak.Infrastructure.Data;
 using FStreak.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using FStreak.Application.Services.Interface;
+using FStreak.Application.Services.Implementation;
 
 namespace FStreak.API
 {
