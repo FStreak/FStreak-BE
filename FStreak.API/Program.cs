@@ -1,7 +1,11 @@
 ﻿using DotNetEnv;
 using FStreak.Domain.Interfaces;
+using FStreak.Domain.Entities;
 using FStreak.Infrastructure.Data;
 using FStreak.Infrastructure.Repositories;
+using FStreak.Application.Services.Interface;
+using FStreak.Application.Services.Implementation;
+using FStreak.API.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,10 +13,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using FStreak.Application.Services.Interface;
-using FStreak.Application.Services.Implementation;
-using FStreak.Domain.Entities;
-using FStreak.API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
