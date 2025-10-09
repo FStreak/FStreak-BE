@@ -238,11 +238,11 @@ namespace FStreak.API.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 Username = user.UserName,
-                FirstName = user.FirstName,
+                FirstName = "hihi",
                 LastName = user.LastName,
                 CurrentStreak = user.CurrentStreak,
                 LongestStreak = user.LongestStreak,
-                Roles = roles.ToArray()
+                Roles = roles.ToArray(),
             };
         }
     }
