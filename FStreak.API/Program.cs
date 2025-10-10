@@ -133,7 +133,10 @@ builder.Services.AddCors(options =>
 
     options.AddPolicy("AllowSpecific", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "https://fstreak.vercel.app")
+        policy.WithOrigins(
+            "http://localhost:5173", 
+            "http://localhost:5173", 
+            "https://fstreak.vercel.app")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
