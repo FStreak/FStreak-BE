@@ -86,6 +86,21 @@ builder.Services.AddAuthentication(options =>
 {
     options.SaveToken = true;
     options.RequireHttpsMetadata = false;
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
+
     options.TokenValidationParameters = new TokenValidationParameters()
     {
         ValidateIssuer = true,
@@ -106,8 +121,31 @@ builder.Services.AddAuthentication(options =>
 // 3. INFRASTRUCTURE SERVICES
 // -----------------------------
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+
+    options.AddPolicy("AllowSpecific", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "https://fstreak.vercel.app")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
 // Add SignalR
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+
+});
 
 // Add Caching
 if (!string.IsNullOrEmpty(builder.Configuration.GetConnectionString("Redis")))
@@ -190,6 +228,8 @@ var app = builder.Build();
         c.RoutePrefix = string.Empty;
     });
 
+app.UseCors("AllowSpecific");
+//app.UseCors("AllowAll");
 
 // Configure middleware pipeline
 app.UseHttpsRedirection();
