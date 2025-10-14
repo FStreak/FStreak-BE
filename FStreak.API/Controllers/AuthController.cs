@@ -238,7 +238,7 @@ namespace FStreak.API.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 Username = user.UserName,
-                FirstName = "hihi",
+                FirstName = user.FirstName,
                 LastName = user.LastName,
                 CurrentStreak = user.CurrentStreak,
                 LongestStreak = user.LongestStreak,

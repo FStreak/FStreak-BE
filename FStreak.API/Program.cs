@@ -173,6 +173,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add Unit of Work and Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Add Domain Services
 builder.Services.AddScoped<IAgoraService, AgoraService>();
@@ -180,6 +181,7 @@ builder.Services.AddScoped<IStudyRoomService, StudyRoomService>();
 builder.Services.AddScoped<IStreakService, StreakService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IStudyRoomService, StudyRoomService>();
 
 // -----------------------------
 // 5. API DOCS & MONITORING

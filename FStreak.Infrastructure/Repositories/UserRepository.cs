@@ -14,5 +14,10 @@ namespace FStreak.Infrastructure.Repositories
         public UserRepository(FStreakDbContext context) : base(context)
         {
         }
+        //viết lại hàm khác vì userId là string, còn repository là int
+        public async Task<ApplicationUser> GetByIdAsync(string userId)
+        {
+            return await _context.Users.FindAsync(userId);
+        }
     }
 }
