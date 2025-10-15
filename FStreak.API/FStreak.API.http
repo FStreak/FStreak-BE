@@ -1,6 +1,16 @@
 @FStreak.API_HostAddress = http://localhost:5161
 
-GET {{FStreak.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Register new user
+POST {{FStreak.API_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "username": "testuser",
+    "firstName": "Test",
+    "lastName": "User",
+    "password": "Test@123",
+    "confirmPassword": "Test@123"
+}
 
 ###

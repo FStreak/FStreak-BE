@@ -4,6 +4,7 @@ using FStreak.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FStreak.Infrastructure.Migrations
 {
     [DbContext(typeof(FStreakDbContext))]
-    partial class FStreakDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251009110914_Add_Field_StudyRoom_Table_StartTime_EndTime")]
+    partial class Add_Field_StudyRoom_Table_StartTime_EndTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

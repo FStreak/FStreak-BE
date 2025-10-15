@@ -1,7 +1,11 @@
 ﻿using DotNetEnv;
 using FStreak.Domain.Interfaces;
+using FStreak.Domain.Entities;
 using FStreak.Infrastructure.Data;
 using FStreak.Infrastructure.Repositories;
+using FStreak.Application.Services.Interface;
+using FStreak.Application.Services.Implementation;
+using FStreak.API.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,10 +13,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using FStreak.Application.Services.Interface;
-using FStreak.Application.Services.Implementation;
-using FStreak.Domain.Entities;
-using FStreak.API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,6 +86,21 @@ builder.Services.AddAuthentication(options =>
 {
     options.SaveToken = true;
     options.RequireHttpsMetadata = false;
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
+
     options.TokenValidationParameters = new TokenValidationParameters()
     {
         ValidateIssuer = true,
@@ -106,8 +121,34 @@ builder.Services.AddAuthentication(options =>
 // 3. INFRASTRUCTURE SERVICES
 // -----------------------------
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+
+    options.AddPolicy("AllowSpecific", policy =>
+    {
+        policy.WithOrigins(
+            "http://localhost:3000", 
+            "http://localhost:5173", 
+            "https://fstreak.vercel.app")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
 // Add SignalR
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+
+});
 
 // Add Caching
 if (!string.IsNullOrEmpty(builder.Configuration.GetConnectionString("Redis")))
@@ -132,17 +173,20 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add Unit of Work and Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Add Domain Services
+builder.Services.AddScoped<IAgoraService, AgoraService>();
 builder.Services.AddScoped<IStudyRoomService, StudyRoomService>();
 builder.Services.AddScoped<IStreakService, StreakService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IStudyRoomService, StudyRoomService>();
 
 // -----------------------------
 // 5. API DOCS & MONITORING
 // -----------------------------
-
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "F-Streak API", Version = "v1" });
@@ -153,7 +197,8 @@ builder.Services.AddSwaggerGen(c =>
         Description = "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'",
         Name = "Authorization",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
+        //Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         Scheme = "Bearer"
     });
 
@@ -180,14 +225,16 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // Configure development environment
-
     app.UseSwagger();
+    app.UseRouting();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "F-Streak API V1");
         c.RoutePrefix = string.Empty;
     });
 
+app.UseCors("AllowSpecific");
+//app.UseCors("AllowAll");
 
 // Configure middleware pipeline
 app.UseHttpsRedirection();

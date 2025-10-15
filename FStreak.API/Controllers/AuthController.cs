@@ -242,7 +242,7 @@ namespace FStreak.API.Controllers
                 LastName = user.LastName,
                 CurrentStreak = user.CurrentStreak,
                 LongestStreak = user.LongestStreak,
-                Roles = roles.ToArray()
+                Roles = roles.ToArray(),
             };
         }
     }

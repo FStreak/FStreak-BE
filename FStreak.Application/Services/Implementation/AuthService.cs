@@ -58,8 +58,27 @@ namespace FStreak.Application.Services.Implementation
                 return (false, string.Join(", ", result.Errors.Select(e => e.Description)), null);
             }
 
-            // Add to User role
-            await _userManager.AddToRoleAsync(user, "User");
+            // Ensure User role exists and add user to it
+            if (!await _roleManager.RoleExistsAsync("User"))
+            {
+                var roleResult = await _roleManager.CreateAsync(new ApplicationRole 
+                { 
+                    Name = "User",
+                    Description = "Regular user with basic access rights"
+                });
+                if (!roleResult.Succeeded)
+                {
+                    await _userManager.DeleteAsync(user); // Rollback user creation
+                    return (false, "Error creating user role", null);
+                }
+            }
+
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, "User");
+            if (!addToRoleResult.Succeeded)
+            {
+                await _userManager.DeleteAsync(user); // Rollback user creation
+                return (false, "Error assigning user role", null);
+            }
 
             var authResult = await GenerateAuthenticationResultAsync(user);
             return (true, "User registered successfully", authResult);
