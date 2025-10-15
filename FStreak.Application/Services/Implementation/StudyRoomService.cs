@@ -356,7 +356,9 @@ public class StudyRoomService : IStudyRoomService
                     FirstName = room.CreatedBy.FirstName,
                     LastName = room.CreatedBy.LastName
                 } : null,
-                RoomUsers = room.RoomUsers.Select(ru => new RoomUserDto
+                RoomUsers = room.RoomUsers
+                .Where(ru => ru.LeftAt == null) // Chỉ lấy những người chưa rời phòng
+                .Select(ru => new RoomUserDto
                 {
                     RoomUserId = ru.RoomUserId,
                     UserId = ru.UserId,
@@ -422,7 +424,9 @@ public class StudyRoomService : IStudyRoomService
                     FirstName = room.CreatedBy.FirstName,
                     LastName = room.CreatedBy.LastName
                 } : null,
-                RoomUsers = room.RoomUsers.Select(ru => new RoomUserDto
+                RoomUsers = room.RoomUsers
+                .Where(ru => ru.LeftAt == null) // Chỉ lấy những người chưa rời phòng
+                .Select(ru => new RoomUserDto
                 {
                     RoomUserId = ru.RoomUserId,
                     UserId = ru.UserId,

@@ -161,4 +161,82 @@ public class StudyRoomHub : Hub
             throw;
         }
     }
+
+    // Media status update (video/audio)
+    public async Task UpdateMediaStatus(int roomId, MediaStatusUpdate status)
+    {
+        var userId = Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        await Clients.OthersInGroup(roomId.ToString()).SendAsync("MediaStatusUpdated", new
+        {
+            userId,
+            isVideoOn = status.IsVideoOn,
+            isAudioOn = status.IsAudioOn,
+            timestamp = DateTime.UtcNow
+        });
+    }
+
+    // Screen sharing status
+    public async Task UpdateScreenSharingStatus(int roomId, bool isSharing)
+    {
+        var userId = Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        await Clients.OthersInGroup(roomId.ToString()).SendAsync("ScreenSharingStatusUpdated", new
+        {
+            userId,
+            isSharing,
+            timestamp = DateTime.UtcNow
+        });
+    }
+
+    // User status update (joined/left video call)
+    public async Task UpdateUserStatus(int roomId, UserStatusUpdate status)
+    {
+        var userId = Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        await Clients.OthersInGroup(roomId.ToString()).SendAsync("UserStatusUpdated", new
+        {
+            userId,
+            status = status.Status, // "joined-video", "left-video"
+            timestamp = DateTime.UtcNow
+        });
+    }
+
+    // Request to speak (for webinar mode)
+    public async Task RequestToSpeak(int roomId)
+    {
+        var userId = Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userName = Context.User?.FindFirstValue(ClaimTypes.Name);
+        
+        await Clients.Group(roomId.ToString()).SendAsync("SpeakRequestReceived", new
+        {
+            userId,
+            userName,
+            timestamp = DateTime.UtcNow
+        });
+    }
+
+    // Grant/Revoke speaking permission
+    public async Task GrantSpeakingPermission(int roomId, string targetUserId, bool grant)
+    {
+        var userId = Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        await Clients.User(targetUserId).SendAsync("SpeakingPermissionChanged", new
+        {
+            granted = grant,
+            grantedBy = userId,
+            timestamp = DateTime.UtcNow
+        });
+    }
+}
+
+public class MediaStatusUpdate
+{
+    public bool IsVideoOn { get; set; }
+    public bool IsAudioOn { get; set; }
+}
+
+public class UserStatusUpdate
+{
+    public string Status { get; set; } // "joined-video", "left-video"
 }
