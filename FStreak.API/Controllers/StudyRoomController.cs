@@ -177,30 +177,30 @@ namespace FStreak.API.Controllers
         }
 
         // Refresh Agora tokens for existing room session
-        [HttpPost("{roomId}/refresh-tokens")]
-        public async Task<IActionResult> RefreshAgoraTokens(int roomId)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized("User not authenticated");
+        //[HttpPost("{roomId}/refresh-tokens")]
+        //public async Task<IActionResult> RefreshAgoraTokens(int roomId)
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    if (string.IsNullOrEmpty(userId))
+        //        return Unauthorized("User not authenticated");
 
-            // Verify user is in the room
-            var roomResult = await _studyRoomService.GetRoomByIdAsync(roomId);
-            if (!roomResult.Succeeded)
-                return NotFound(roomResult.Error);
+        //    // Verify user is in the room
+        //    var roomResult = await _studyRoomService.GetRoomByIdAsync(roomId);
+        //    if (!roomResult.Succeeded)
+        //        return NotFound(roomResult.Error);
 
-            var isInRoom = roomResult.Data?.RoomUsers?.Any(u => u.UserId == userId && u.IsOnline) ?? false;
-            if (!isInRoom)
-                return BadRequest("User is not in the room");
+        //    var isInRoom = roomResult.Data?.RoomUsers?.Any(u => u.UserId == userId && u.IsOnline) ?? false;
+        //    if (!isInRoom)
+        //        return BadRequest("User is not in the room");
 
-            // Generate new tokens
-            var channelName = $"room_{roomId}";
-            var tokenResult = await _agoraService.GenerateTokenAsync(channelName, userId);
+        //    // Generate new tokens
+        //    var channelName = $"room_{roomId}";
+        //    var tokenResult = await _agoraService.GenerateTokenAsync(roomId, roomUserId, userName);
 
-            if (!tokenResult.Succeeded)
-                return BadRequest(tokenResult.Error);
+        //    if (!tokenResult.Succeeded)
+        //        return BadRequest(tokenResult.Error);
 
-            return Ok(tokenResult.Data);
-        }
+        //    return Ok(tokenResult.Data);
+        //}
     }
 }

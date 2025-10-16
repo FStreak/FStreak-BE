@@ -37,5 +37,21 @@ namespace FStreak.API.Controllers
             }
         }
 
+        // Test endpoint without authentication for token comparison
+        [HttpGet("test-token")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetTestToken([FromQuery] string channelName = "test-channel")
+        {
+            var result = await _agoraService.GenerateTokenAsync(channelName, "test-user");
+            if (result.Succeeded)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return StatusCode(500, result.Error);
+            }
+        }
+
     }
 }
