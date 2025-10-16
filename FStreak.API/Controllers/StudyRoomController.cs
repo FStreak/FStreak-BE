@@ -84,9 +84,10 @@ namespace FStreak.API.Controllers
             if (!includeTokens)
                 return Ok(joinResult.Data);
 
-            // Generate Agora tokens
+            // Generate Agora tokens with roomUserId as uid
             var channelName = $"room_{roomId}";
-            var tokenResult = await _agoraService.GenerateTokenAsync(channelName, userId);
+            var roomUserId = joinResult.Data?.RoomUserId ?? 0;
+            var tokenResult = await _agoraService.GenerateTokenAsync(channelName, userId, (uint)roomUserId);
             
             if (!tokenResult.Succeeded)
             {
@@ -129,7 +130,8 @@ namespace FStreak.API.Controllers
                 return Ok(joinResult.Data); // Return without tokens if can't get room
 
             var channelName = $"room_{roomResult.Data.StudyRoomId}";
-            var tokenResult = await _agoraService.GenerateTokenAsync(channelName, userId);
+            var roomUserId = joinResult.Data?.RoomUserId ?? 0;
+            var tokenResult = await _agoraService.GenerateTokenAsync(channelName, userId, (uint)roomUserId);
             
             if (!tokenResult.Succeeded)
             {

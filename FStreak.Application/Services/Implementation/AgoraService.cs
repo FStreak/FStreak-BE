@@ -15,7 +15,7 @@ namespace FStreak.Application.Services.Implementation
             _configuration = configuration;
         }
 
-        public async Task<Result<AgoraTokenResponse>> GenerateTokenAsync(string channelName, string userId)
+        public async Task<Result<AgoraTokenResponse>> GenerateTokenAsync(string channelName, string userId, uint roomUserId = 0)
         {
             try
             {
@@ -29,7 +29,8 @@ namespace FStreak.Application.Services.Implementation
                 }
 
                 // Use official RtcTokenBuilder2 (AccessToken2) - Format 007
-                uint uid = 0; // Use 0 for universal token, or parse userId if needed
+                // Use roomUserId as Agora UID, fallback to 0 if not provided
+                uint uid = roomUserId > 0 ? roomUserId : 0;
                 uint expirationTimeInSeconds = 3600; // 1 hour
 
                 // Use RolePublisher for full RTC privileges
