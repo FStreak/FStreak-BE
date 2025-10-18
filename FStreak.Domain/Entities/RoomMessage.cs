@@ -14,10 +14,3 @@ public class RoomMessage : BaseEntity
     public StudyRoom Room { get; set; } = null!;
     public ApplicationUser User { get; set; } = null!;
 }
-
-public enum MessageType
-{
-    Text,
-    Emoji,
-    System
-}

@@ -26,6 +26,14 @@ namespace FStreak.Infrastructure.Repositories
         private IRepository<RoomUser> _roomUsers;
         private IRepository<RoomMessage> _roomMessages;
         private IRepository<RefreshToken> _refreshTokens;
+        
+        // Group Study repositories
+        private IRepository<GroupMember> _groupMembers;
+        private IRepository<GroupInvite> _groupInvites;
+        private IRepository<SessionParticipant> _sessionParticipants;
+        private IRepository<SessionMessage> _sessionMessages;
+        private IRepository<SessionReaction> _sessionReactions;
+        private IPushSubscriptionRepository _pushSubscriptions;
 
         public UnitOfWork(FStreakDbContext context)
         {
@@ -51,6 +59,16 @@ namespace FStreak.Infrastructure.Repositories
         public IRepository<RoomUser> RoomUsers => _roomUsers ??= new Repository<RoomUser>(_context);
         public IRepository<RoomMessage> RoomMessages => _roomMessages ??= new Repository<RoomMessage>(_context);
         public IRepository<RefreshToken> RefreshTokens => _refreshTokens ??= new Repository<RefreshToken>(_context);
+
+        // Group Study repositories
+        public IRepository<GroupMember> GroupMembers => _groupMembers ??= new GroupMemberRepository(_context);
+        public IRepository<GroupInvite> GroupInvites => _groupInvites ??= new GroupInviteRepository(_context);
+        public IRepository<SessionParticipant> SessionParticipants => _sessionParticipants ??= new SessionParticipantRepository(_context);
+        public IRepository<SessionMessage> SessionMessages => _sessionMessages ??= new SessionMessageRepository(_context);
+        public IRepository<SessionReaction> SessionReactions => _sessionReactions ??= new SessionReactionRepository(_context);
+
+        // Push Notification repository
+        public IPushSubscriptionRepository PushSubscriptions => _pushSubscriptions ??= new PushSubscriptionRepository(_context);
 
         public async Task<int> SaveChangesAsync()
         {

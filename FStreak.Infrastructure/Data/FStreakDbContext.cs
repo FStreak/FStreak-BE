@@ -26,6 +26,14 @@ namespace FStreak.Infrastructure.Data
         public DbSet<UserFriend> UserFriends { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Reminder> Reminders { get; set; }
+
+        // Group Study related DbSets
+        public DbSet<GroupMember> GroupMembers { get; set; }
+        public DbSet<GroupInvite> GroupInvites { get; set; }
+        public DbSet<SessionParticipant> SessionParticipants { get; set; }
+        public DbSet<SessionMessage> SessionMessages { get; set; }
+        public DbSet<SessionReaction> SessionReactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,21 +48,9 @@ namespace FStreak.Infrastructure.Data
 
             // Configure StudySession relationships
             modelBuilder.Entity<StudySession>()
-                .HasOne(s => s.StudyGroup)
+                .HasOne(s => s.Group)
                 .WithMany()
-                .HasForeignKey(s => s.StudyGroupId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudySession>()
-                .HasOne(s => s.User)
-                .WithMany(u => u.StudySessions)
-                .HasForeignKey(s => s.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StudySession>()
-                .HasOne(s => s.Subject)
-                .WithMany()
-                .HasForeignKey(s => s.SubjectId)
+                .HasForeignKey(s => s.GroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Configure UserChallenge relationships
@@ -89,6 +85,13 @@ namespace FStreak.Infrastructure.Data
                 .WithMany(u => u.Friends)
                 .HasForeignKey(uf => uf.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Reminder relationships
+            modelBuilder.Entity<Reminder>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserFriend>()
                 .HasOne(uf => uf.Friend)
@@ -134,6 +137,77 @@ namespace FStreak.Infrastructure.Data
             modelBuilder.Entity<Subject>()
                 .HasIndex(s => s.Code)
                 .IsUnique();
+
+            // Configure GroupMember relationships
+            modelBuilder.Entity<GroupMember>()
+                .HasOne(gm => gm.User)
+                .WithMany(u => u.GroupMemberships)
+                .HasForeignKey(gm => gm.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GroupMember>()
+                .HasOne(gm => gm.Group)
+                .WithMany(g => g.Members)
+                .HasForeignKey(gm => gm.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure GroupInvite relationships
+            modelBuilder.Entity<GroupInvite>()
+                .HasOne(gi => gi.InvitedBy)
+                .WithMany(u => u.SentGroupInvites)
+                .HasForeignKey(gi => gi.InvitedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GroupInvite>()
+                .HasOne(gi => gi.InvitedUser)
+                .WithMany(u => u.ReceivedGroupInvites)
+                .HasForeignKey(gi => gi.InvitedUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GroupInvite>()
+                .HasOne(gi => gi.Group)
+                .WithMany(g => g.Invites)
+                .HasForeignKey(gi => gi.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure SessionParticipant relationships
+            modelBuilder.Entity<SessionParticipant>()
+                .HasOne(sp => sp.User)
+                .WithMany(u => u.SessionParticipations)
+                .HasForeignKey(sp => sp.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SessionParticipant>()
+                .HasOne(sp => sp.Session)
+                .WithMany(s => s.Participants)
+                .HasForeignKey(sp => sp.SessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure SessionMessage relationships
+            modelBuilder.Entity<SessionMessage>()
+                .HasOne(sm => sm.User)
+                .WithMany(u => u.SessionMessages)
+                .HasForeignKey(sm => sm.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SessionMessage>()
+                .HasOne(sm => sm.Session)
+                .WithMany(s => s.Messages)
+                .HasForeignKey(sm => sm.SessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure SessionReaction relationships
+            modelBuilder.Entity<SessionReaction>()
+                .HasOne(sr => sr.User)
+                .WithMany(u => u.SessionReactions)
+                .HasForeignKey(sr => sr.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SessionReaction>()
+                .HasOne(sr => sr.Message)
+                .WithMany(m => m.Reactions)
+                .HasForeignKey(sr => sr.MessageId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

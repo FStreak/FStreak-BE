@@ -63,7 +63,7 @@ public class StudyRoomHub : Hub
                 await Clients.Group(roomId.ToString()).SendAsync("UserJoined", result.Data);
                 
                 // Start tracking study time
-                await _streakService.StartTracking(roomId, userId);
+                await _streakService.StartTracking(userId, "StudyRoom");
             }
             else
             {
@@ -94,7 +94,7 @@ public class StudyRoomHub : Hub
                 await Clients.Group(roomId.ToString()).SendAsync("UserLeft", result.Data);
                 
                 // Stop tracking and process streak if eligible
-                await _streakService.StopTracking(roomId, userId);
+                await _streakService.StopTracking(userId, "StudyRoom");
             }
             else
             {

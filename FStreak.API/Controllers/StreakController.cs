@@ -1,11 +1,17 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using FStreak.Domain.Entities;
+using FStreak.Application.DTOs;
 using FStreak.Application.Services.Interface;
-using FStreak.Application.Services.Implementation;
 
 namespace FStreak.API.Controllers
 {
+    // This controller is deprecated. Please use StreaksController instead.
+    // Will be removed in a future update.
     [ApiController]
-    [Route("api/streaks")]
+    [Route("api/streak")]
+    [Obsolete("This controller is deprecated. Please use StreaksController instead.")]
     public class StreakController : ControllerBase
     {
         private readonly IStreakService _streakService;
@@ -15,37 +21,10 @@ namespace FStreak.API.Controllers
             _streakService = streakService;
         }
 
-        [HttpPost("checkin")]
-        public async Task<IActionResult> CheckIn([FromQuery] int userId)
+        [HttpGet]
+        public IActionResult Index()
         {
-            var (success, currentStreak, longestStreak) = await _streakService.CheckInAsync(userId.ToString());
-            if (!success)
-            {
-                return BadRequest(new { 
-                    success = false, 
-                    message = "Already checked in today or user not found" 
-                });
-            }
-            return Ok(new
-            {
-                success = true,
-                currentStreak,
-                longestStreak
-            });
-        }
-
-        [HttpGet("{userId}/current")]
-        public async Task<IActionResult> GetCurrentStreak(int userId)
-        {
-            var streak = await _streakService.GetCurrentStreakAsync(userId.ToString());
-            return Ok(new { currentStreak = streak });
-        }
-
-        [HttpGet("{userId}/longest")]
-        public async Task<IActionResult> GetLongestStreak(int userId)
-        {
-            var streak = await _streakService.GetLongestStreakAsync(userId.ToString());
-            return Ok(new { longestStreak = streak });
+            return Redirect("/api/streaks");
         }
     }
 }
