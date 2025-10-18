@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using FStreak.Application.Services.Interface;
 using FStreak.Application.Services.Implementation;
+using WebPush;
 
 namespace FStreak.API
 {
@@ -32,8 +33,21 @@ namespace FStreak.API
 
             // Add Services
             services.AddScoped<IStreakService, StreakService>();
+            services.AddScoped<IReminderService, ReminderService>();
+            services.AddScoped<IReminderRepository, ReminderRepository>();
+
+            // Add Push Notification Services
+            services.AddScoped<IPushSubscriptionRepository, PushSubscriptionRepository>();
+            services.AddScoped<IPushNotificationService, PushNotificationService>();
+            services.AddSingleton<VapidDetails>(sp => new VapidDetails(
+                "mailto:support@fstreak.com",  // Replace with your contact email
+                "BNxviC3KknO_L3GZfXJQ2F5P0XPgAB0lGfX22w8O3MYZzXC-4G_Dy3MbTiQFKnzVQq-JLYD5YMD4peGIlSK4mYM",
+                "eO5Tgc4dQW3CXv99pjbL91q5CaxBhxe_Z-xjD1CqshI"
+            ));
+            services.AddSingleton<WebPushClient>();
 
             return services;
         }
     }
 }
+    

@@ -24,6 +24,16 @@ namespace FStreak.Domain.Interfaces
         IRepository<RoomUser> RoomUsers { get; }
         IRepository<RoomMessage> RoomMessages { get; }
         IRepository<RefreshToken> RefreshTokens { get; }
+        
+        // Group Study Repositories
+        IRepository<GroupMember> GroupMembers { get; }
+        IRepository<GroupInvite> GroupInvites { get; }
+        IRepository<SessionParticipant> SessionParticipants { get; }
+        IRepository<SessionMessage> SessionMessages { get; }
+        IRepository<SessionReaction> SessionReactions { get; }
+        
+        // Push Notification
+        IPushSubscriptionRepository PushSubscriptions { get; }
 
         Task<int> SaveChangesAsync();
     }

@@ -9,23 +9,18 @@ namespace FStreak.Domain.Entities
         [Key]
         public int StreakLogId { get; set; }
 
-
         [Required]
-        public string UserId { get; set; }
-
-        /// <summary>
-        /// RoomId nơi user thực hiện streak (0 nếu check-in thủ công)
-        /// </summary>
-        public int RoomId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         [Required]
         public DateTime Date { get; set; }
 
         [Required]
-        public int Minutes { get; set; }
+        [MaxLength(50)]
+        public string Source { get; set; } = string.Empty;
 
         // Navigation property
         [ForeignKey("UserId")]
-        public virtual ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; } = null!;
     }
 }
