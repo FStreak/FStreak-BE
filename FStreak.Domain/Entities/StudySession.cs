@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FStreak.Domain.Common;
@@ -8,32 +7,70 @@ namespace FStreak.Domain.Entities
     public class StudySession : BaseEntity
     {
         [Key]
-        public int StudySessionId { get; set; }
+        public int SessionId { get; set; }
 
         [Required]
-        public int StudyGroupId { get; set; }
+        [MaxLength(100)]
+        public string Name { get; set; } = string.Empty;
 
         [Required]
-        public string UserId { get; set; }
+        public int GroupId { get; set; }
+
+        [ForeignKey(nameof(GroupId))]
+        public virtual StudyGroup Group { get; set; } = null!;
 
         [Required]
-        public int SubjectId { get; set; }
+        public SessionMode Mode { get; set; }
+
+        public PomodoroConfig? PomodoroConfig { get; set; }
 
         [Required]
-        public DateTime StartTime { get; set; }
+        public DateTime StartAt { get; set; }
 
-        public DateTime? EndTime { get; set; }
+        public int DurationMinutes { get; set; }
 
-        public int PomodoroCount { get; set; }
+        [Required]
+        public SessionStatus Status { get; set; } = SessionStatus.Scheduled;
 
-        // Navigation properties
-        [ForeignKey("StudyGroupId")]
-        public virtual StudyGroup StudyGroup { get; set; }
+        [Required]
+        public string HostId { get; set; } = string.Empty;
 
-        [ForeignKey("UserId")]
-        public virtual ApplicationUser User { get; set; }
+        [ForeignKey(nameof(HostId))]
+        public virtual ApplicationUser Host { get; set; } = null!;
 
-        [ForeignKey("SubjectId")]
-        public virtual Subject Subject { get; set; }
+        public virtual ICollection<SessionParticipant> Participants { get; set; } = new List<SessionParticipant>();
+        public virtual ICollection<SessionMessage> Messages { get; set; } = new List<SessionMessage>();
+        public virtual ICollection<SessionReaction> Reactions { get; set; } = new List<SessionReaction>();
+    }
+
+    public enum SessionMode
+    {
+        Free,
+        Pomodoro
+    }
+
+    public enum SessionStatus
+    {
+        Scheduled,
+        Live,
+        Paused,
+        Ended
+    }
+
+    public class PomodoroConfig
+    {
+        public int FocusMinutes { get; set; } = 25;
+        public int BreakMinutes { get; set; } = 5;
+        public int Rounds { get; set; } = 4;
+
+        public DateTime? CurrentPhaseStartTime { get; set; }
+        public PomodoroPhase CurrentPhase { get; set; }
+        public int CurrentRound { get; set; } = 1;
+    }
+
+    public enum PomodoroPhase
+    {
+        Focus,
+        Break
     }
 }
