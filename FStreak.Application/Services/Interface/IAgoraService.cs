@@ -9,7 +9,7 @@ namespace FStreak.Application.Services.Interface
 {
     public interface IAgoraService
     {
-        Task<Result<AgoraTokenResponse>> GenerateTokenAsync(string channelName, string userId);
+        Task<Result<AgoraTokenResponse>> GenerateTokenAsync(string channelName, string userId, uint roomUserId = 0);
 
     }
 }

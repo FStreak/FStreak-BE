@@ -126,9 +126,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.SetIsOriginAllowed(_ => true) // Allow any origin for development
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials(); // Required for SignalR WebSockets
     });
 
     options.AddPolicy("AllowSpecific", policy =>
@@ -233,8 +234,8 @@ var app = builder.Build();
         c.RoutePrefix = string.Empty;
     });
 
-app.UseCors("AllowSpecific");
-//app.UseCors("AllowAll");
+//app.UseCors("AllowSpecific"); // Use for production
+app.UseCors("AllowAll"); // Use for development (allows SignalR WebSockets)
 
 // Configure middleware pipeline
 app.UseHttpsRedirection();
