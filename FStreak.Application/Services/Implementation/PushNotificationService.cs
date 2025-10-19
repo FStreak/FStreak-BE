@@ -26,7 +26,7 @@ namespace FStreak.Application.Services.Implementation
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _pushClient = new WebPushClient();
-            
+
             // Get VAPID details from configuration
             _vapidDetails = new VapidDetails(
                 _configuration["WebPush:Subject"],
@@ -108,7 +108,7 @@ namespace FStreak.Application.Services.Implementation
                             subscription.Auth);
 
                         await _pushClient.SendNotificationAsync(pushSubscription, payload, _vapidDetails);
-                        
+
                         subscription.LastUsed = DateTime.UtcNow;
                         success = true;
                     }
@@ -138,7 +138,7 @@ namespace FStreak.Application.Services.Implementation
             {
                 var uniqueUserIds = userIds.Distinct().ToList();
                 var subscriptions = await _unitOfWork.PushSubscriptions.GetActiveSubscriptionsForUsersAsync(uniqueUserIds);
-                
+
                 if (!subscriptions.Any())
                 {
                     _logger.LogWarning("No active push subscriptions found for users");
@@ -158,7 +158,7 @@ namespace FStreak.Application.Services.Implementation
                             subscription.Auth);
 
                         await _pushClient.SendNotificationAsync(pushSubscription, payload, _vapidDetails);
-                        
+
                         subscription.LastUsed = DateTime.UtcNow;
                         success = true;
                     }
@@ -186,9 +186,11 @@ namespace FStreak.Application.Services.Implementation
         {
             try
             {
-                var subscription = await _unitOfWork.PushSubscriptions
-                    .FindAsync(s => s.Endpoint == endpoint && s.Enabled)
-                    .FirstOrDefaultAsync();
+                var subscriptions = await _unitOfWork.PushSubscriptions
+                                    .FindAsync(s => s.Endpoint == endpoint && s.Enabled);
+
+                var subscription = subscriptions.FirstOrDefault();
+
 
                 if (subscription == null)
                 {
@@ -203,7 +205,7 @@ namespace FStreak.Application.Services.Implementation
                     subscription.Auth);
 
                 await _pushClient.SendNotificationAsync(pushSubscription, payload, _vapidDetails);
-                
+
                 subscription.LastUsed = DateTime.UtcNow;
                 await _unitOfWork.SaveChangesAsync();
 
