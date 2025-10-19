@@ -186,11 +186,9 @@ namespace FStreak.Application.Services.Implementation
         {
             try
             {
-                var subscription = await _unitOfWork.PushSubscriptions
-                    .FindAsync(s => s.Endpoint == endpoint && s.Enabled)
-                    .FirstOrDefaultAsync();
+                var subscription = await _unitOfWork.PushSubscriptions.GetByEndpointAsync(endpoint);
 
-                if (subscription == null)
+                if (subscription == null || !subscription.Enabled)
                 {
                     _logger.LogWarning("No active subscription found for endpoint {Endpoint}", endpoint);
                     return Result<bool>.Failure("Subscription not found or disabled");

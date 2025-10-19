@@ -40,5 +40,11 @@ namespace FStreak.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<PushSubscription?> GetByEndpointAsync(string endpoint)
+        {
+            return await _dbSet
+        .FirstOrDefaultAsync(s => s.Endpoint == endpoint);
+        }
     }
 }

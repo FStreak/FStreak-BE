@@ -8,5 +8,6 @@ namespace FStreak.Domain.Interfaces
         Task<List<PushSubscription>> GetActiveSubscriptionsForUsersAsync(IEnumerable<string> userIds);
         Task<bool> ExistsAsync(string endpoint);
         Task DisableSubscriptionAsync(string endpoint);
+        Task<PushSubscription?> GetByEndpointAsync(string endpoint);
     }
 }
