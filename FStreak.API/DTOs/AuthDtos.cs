@@ -27,6 +27,9 @@ namespace FStreak.API.DTOs
         [Required]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
+
+        // Cho phép chọn role khi đăng ký ("Teacher", "Student", ...)
+        public string Role { get; set; } = "User";
     }
 
     public class LoginRequestDto
