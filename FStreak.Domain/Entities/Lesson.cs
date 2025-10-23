@@ -23,7 +23,19 @@ namespace FStreak.Domain.Entities
         [Required]
         public string CreatedById { get; set; } = string.Empty;
 
-        // Navigation properties
-        public virtual ApplicationUser CreatedBy { get; set; } = null!;
+    // Tài liệu đính kèm (PDF, Word, v.v.)
+    [MaxLength(500)]
+    public string? DocumentUrl { get; set; }
+
+    // Video đính kèm (link hoặc file)
+    [MaxLength(500)]
+    public string? VideoUrl { get; set; }
+
+    // Loại tài liệu (pdf, docx, mp4, youtube, ...)
+    [MaxLength(50)]
+    public string? DocumentType { get; set; }
+
+    // Navigation properties
+    public virtual ApplicationUser CreatedBy { get; set; } = null!;
     }
 }
