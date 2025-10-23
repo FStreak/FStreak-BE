@@ -244,8 +244,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Configure endpoints
+
 app.MapControllers();
 app.MapHub<StudyRoomHub>("/hubs/studyroom");
+app.MapHub<FStreak.API.Hubs.StreakHub>("/hubs/streak");
 
 // -----------------------------
 // 7. INITIALIZATION

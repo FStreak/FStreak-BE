@@ -42,7 +42,7 @@ namespace FStreak.Application.DTOs
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public LeaderboardPeriod Period { get; set; } = LeaderboardPeriod.Week;
         
-        public int? GroupId { get; set; }
+    public int? GroupId { get; set; }
     }
 
     public enum StreakSource

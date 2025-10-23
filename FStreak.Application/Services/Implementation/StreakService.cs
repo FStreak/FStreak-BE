@@ -33,12 +33,14 @@ namespace FStreak.Application.Services.Implementation
             ILogger<StreakService> logger,
             IUnitOfWork unitOfWork,
             IConfiguration configuration,
-            IDistributedCache cache)
+            IDistributedCache cache,
+            IStreakRealtimeNotifier? realtimeNotifier = null)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _cache = cache;
+            _realtimeNotifier = realtimeNotifier;
         }
 
         public async Task<Result<StreakInfoDto>> GetUserStreakAsync(string userId)
@@ -137,6 +139,10 @@ namespace FStreak.Application.Services.Implementation
                 await _cache.SetStringAsync(key, "used", options);
 
                 _logger.LogInformation("Successfully checked in streak for user {UserId} on {Date}", userId, dto.Date.Date);
+                if (_realtimeNotifier != null)
+                {
+                    await _realtimeNotifier.NotifyStreakCheckedIn(userId, dto.Date.Date);
+                }
                 return await GetUserStreakAsync(userId);
             }
             catch (Exception ex)
