@@ -183,6 +183,7 @@ builder.Services.AddScoped<IStreakService, StreakService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IStudyRoomService, StudyRoomService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
 
 // -----------------------------
 // 5. API DOCS & MONITORING
@@ -256,7 +257,7 @@ try
     using (var scope = app.Services.CreateScope())
     {
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-        var roles = new[] { "Admin", "Moderator", "User" };
+        var roles = new[] { "Admin", "Moderator", "User", "Teacher" };
 
         foreach (var role in roles)
         {

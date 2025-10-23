@@ -36,6 +36,7 @@ namespace FStreak.Infrastructure.Data
         public DbSet<SessionParticipant> SessionParticipants { get; set; }
         public DbSet<SessionMessage> SessionMessages { get; set; }
         public DbSet<SessionReaction> SessionReactions { get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -237,6 +238,13 @@ namespace FStreak.Infrastructure.Data
                 .WithMany(m => m.Reactions)
                 .HasForeignKey(sr => sr.MessageId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure Lesson relationships
+            modelBuilder.Entity<Lesson>()
+                .HasOne(l => l.CreatedBy)
+                .WithMany()
+                .HasForeignKey(l => l.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

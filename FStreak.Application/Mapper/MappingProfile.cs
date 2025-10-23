@@ -18,6 +18,12 @@ namespace FStreak.Application.Mapper
             CreateMap<StudyRoom, StudyRoomDto>()
                 .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
                 .ForMember(dest => dest.RoomUsers, opt => opt.MapFrom(src => src.RoomUsers));
+
+            // Lesson mappings
+            CreateMap<LessonCreateDto, Lesson>();
+            CreateMap<LessonUpdateDto, Lesson>();
+            CreateMap<Lesson, LessonReadDto>()
+                .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => $"{src.CreatedBy.FirstName} {src.CreatedBy.LastName}"));
         }
     }
 }

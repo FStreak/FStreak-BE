@@ -32,6 +32,9 @@ namespace FStreak.Domain.Interfaces
         IRepository<SessionMessage> SessionMessages { get; }
         IRepository<SessionReaction> SessionReactions { get; }
         
+        // Lesson Repository
+        ILessonRepository Lessons { get; }
+        
         // Push Notification
         IPushSubscriptionRepository PushSubscriptions { get; }
 
