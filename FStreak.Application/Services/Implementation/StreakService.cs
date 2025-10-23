@@ -28,6 +28,7 @@ namespace FStreak.Application.Services.Implementation
         private const string CACHE_KEY_PREFIX = "streak_";
         private const int CACHE_EXPIRY_HOURS = 24;
 
+        private readonly IStreakRealtimeNotifier? _realtimeNotifier;
         public StreakService(
             ILogger<StreakService> logger,
             IUnitOfWork unitOfWork,
