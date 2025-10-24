@@ -21,10 +21,7 @@ namespace FStreak.API.Controllers
         [HttpPost]
         [Authorize(Roles = "Teacher")]
         [RequestSizeLimit(50_000_000)] // 50MB
-        public async Task<IActionResult> CreateLesson([
-            FromForm] LessonCreateDto createDto,
-            [FromForm] IFormFile? documentFile,
-            [FromForm] IFormFile? videoFile)
+        public async Task<IActionResult> CreateLesson([FromForm] FStreak.Application.DTOs.LessonCreateWithFileDto dto)
         {
             var teacherId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(teacherId))
@@ -32,30 +29,35 @@ namespace FStreak.API.Controllers
                 return Unauthorized("User ID not found");
             }
 
-            // Xử lý upload file tài liệu
-            if (documentFile != null && documentFile.Length > 0)
+            var createDto = new LessonCreateDto
             {
-                // TODO: Lưu file lên server/cloud và lấy URL
-                // Ví dụ: var documentUrl = await _fileService.SaveFileAsync(documentFile);
-                createDto.DocumentUrl = $"/uploads/docs/{Guid.NewGuid()}_{documentFile.FileName}";
-                createDto.DocumentType = System.IO.Path.GetExtension(documentFile.FileName)?.TrimStart('.').ToLower();
-                // Lưu file vật lý (demo, cần thay bằng lưu cloud thực tế)
+                Title = dto.Title,
+                Description = dto.Description,
+                StartAt = dto.StartAt,
+                DurationMinutes = dto.DurationMinutes,
+                IsPublished = dto.IsPublished
+            };
+
+            // Xử lý upload file tài liệu
+            if (dto.DocumentFile != null && dto.DocumentFile.Length > 0)
+            {
+                createDto.DocumentUrl = $"/uploads/docs/{Guid.NewGuid()}_{dto.DocumentFile.FileName}";
+                createDto.DocumentType = System.IO.Path.GetExtension(dto.DocumentFile.FileName)?.TrimStart('.').ToLower();
                 var path = Path.Combine("wwwroot/uploads/docs", Path.GetFileName(createDto.DocumentUrl));
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
-                    await documentFile.CopyToAsync(stream);
+                    await dto.DocumentFile.CopyToAsync(stream);
                 }
             }
 
             // Xử lý upload file video
-            if (videoFile != null && videoFile.Length > 0)
+            if (dto.VideoFile != null && dto.VideoFile.Length > 0)
             {
-                createDto.VideoUrl = $"/uploads/videos/{Guid.NewGuid()}_{videoFile.FileName}";
-                // Lưu file vật lý (demo, cần thay bằng lưu cloud thực tế)
+                createDto.VideoUrl = $"/uploads/videos/{Guid.NewGuid()}_{dto.VideoFile.FileName}";
                 var path = Path.Combine("wwwroot/uploads/videos", Path.GetFileName(createDto.VideoUrl));
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
-                    await videoFile.CopyToAsync(stream);
+                    await dto.VideoFile.CopyToAsync(stream);
                 }
             }
 
@@ -104,9 +106,7 @@ namespace FStreak.API.Controllers
         [RequestSizeLimit(50_000_000)]
         public async Task<IActionResult> UpdateLesson(
             Guid id,
-            [FromForm] LessonUpdateDto updateDto,
-            [FromForm] IFormFile? documentFile,
-            [FromForm] IFormFile? videoFile)
+            [FromForm] FStreak.Application.DTOs.LessonUpdateWithFileDto dto)
         {
             var teacherId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(teacherId))
@@ -114,26 +114,35 @@ namespace FStreak.API.Controllers
                 return Unauthorized("User ID not found");
             }
 
-            // Xử lý upload file tài liệu
-            if (documentFile != null && documentFile.Length > 0)
+            var updateDto = new LessonUpdateDto
             {
-                updateDto.DocumentUrl = $"/uploads/docs/{Guid.NewGuid()}_{documentFile.FileName}";
-                updateDto.DocumentType = System.IO.Path.GetExtension(documentFile.FileName)?.TrimStart('.').ToLower();
+                Title = dto.Title,
+                Description = dto.Description,
+                StartAt = dto.StartAt,
+                DurationMinutes = dto.DurationMinutes,
+                IsPublished = dto.IsPublished
+            };
+
+            // Xử lý upload file tài liệu
+            if (dto.DocumentFile != null && dto.DocumentFile.Length > 0)
+            {
+                updateDto.DocumentUrl = $"/uploads/docs/{Guid.NewGuid()}_{dto.DocumentFile.FileName}";
+                updateDto.DocumentType = System.IO.Path.GetExtension(dto.DocumentFile.FileName)?.TrimStart('.').ToLower();
                 var path = Path.Combine("wwwroot/uploads/docs", Path.GetFileName(updateDto.DocumentUrl));
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
-                    await documentFile.CopyToAsync(stream);
+                    await dto.DocumentFile.CopyToAsync(stream);
                 }
             }
 
             // Xử lý upload file video
-            if (videoFile != null && videoFile.Length > 0)
+            if (dto.VideoFile != null && dto.VideoFile.Length > 0)
             {
-                updateDto.VideoUrl = $"/uploads/videos/{Guid.NewGuid()}_{videoFile.FileName}";
+                updateDto.VideoUrl = $"/uploads/videos/{Guid.NewGuid()}_{dto.VideoFile.FileName}";
                 var path = Path.Combine("wwwroot/uploads/videos", Path.GetFileName(updateDto.VideoUrl));
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
-                    await videoFile.CopyToAsync(stream);
+                    await dto.VideoFile.CopyToAsync(stream);
                 }
             }
 
