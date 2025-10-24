@@ -47,7 +47,8 @@ namespace FStreak.API.Controllers
                 model.Username,
                 model.FirstName,
                 model.LastName,
-                model.Password);
+                model.Password,
+                model.Role);
 
             if (!result.Succeeded)
             {

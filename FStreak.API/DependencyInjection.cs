@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using FStreak.Application.Services.Interface;
 using FStreak.Application.Services.Implementation;
 using WebPush;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace FStreak.API
 {
@@ -32,7 +33,16 @@ namespace FStreak.API
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             // Add Services
-            services.AddScoped<IStreakService, StreakService>();
+            services.AddScoped<IStreakRealtimeNotifier, FStreak.API.Services.StreakSignalRNotifier>();
+            services.AddScoped<IStreakService>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<StreakService>>();
+                var unitOfWork = sp.GetRequiredService<IUnitOfWork>();
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var cache = sp.GetRequiredService<IDistributedCache>();
+                var notifier = sp.GetService<IStreakRealtimeNotifier>();
+                return new StreakService(logger, unitOfWork, configuration, cache, notifier);
+            });
             services.AddScoped<IReminderService, ReminderService>();
             services.AddScoped<IReminderRepository, ReminderRepository>();
 

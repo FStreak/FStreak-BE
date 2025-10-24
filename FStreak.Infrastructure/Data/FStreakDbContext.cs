@@ -27,6 +27,8 @@ namespace FStreak.Infrastructure.Data
         public DbSet<Reaction> Reactions { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Reminder> Reminders { get; set; }
+        public DbSet<PushSubscription> PushSubscriptions { get; set; }
+        public DbSet<UserStreakHistory> UserStreakHistories { get; set; }
 
         // Group Study related DbSets
         public DbSet<GroupMember> GroupMembers { get; set; }
@@ -34,6 +36,7 @@ namespace FStreak.Infrastructure.Data
         public DbSet<SessionParticipant> SessionParticipants { get; set; }
         public DbSet<SessionMessage> SessionMessages { get; set; }
         public DbSet<SessionReaction> SessionReactions { get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,6 +55,13 @@ namespace FStreak.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(s => s.GroupId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure PomodoroConfig as an owned type of StudySession
+            modelBuilder.Entity<StudySession>()
+                .OwnsOne(s => s.PomodoroConfig, ownedBuilder =>
+                {
+                    // Use default column naming; configure if needed
+                });
 
             // Configure UserChallenge relationships
             modelBuilder.Entity<UserChallenge>()
@@ -119,6 +129,13 @@ namespace FStreak.Infrastructure.Data
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Configure PushSubscription relationships
+            modelBuilder.Entity<PushSubscription>()
+                .HasOne(ps => ps.User)
+                .WithMany()
+                .HasForeignKey(ps => ps.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // Configure RefreshToken relationships
             modelBuilder.Entity<RefreshToken>()
                 .HasOne(rt => rt.User)
@@ -131,6 +148,19 @@ namespace FStreak.Infrastructure.Data
                 .HasOne(sr => sr.CreatedBy)
                 .WithMany()
                 .HasForeignKey(sr => sr.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure UserStreakHistory relationships
+            modelBuilder.Entity<UserStreakHistory>()
+                .HasOne(ush => ush.User)
+                .WithMany()
+                .HasForeignKey(ush => ush.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserStreakHistory>()
+                .HasOne(ush => ush.StudyRoom)
+                .WithMany()
+                .HasForeignKey(ush => ush.StudyRoomId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Configure unique constraints
@@ -208,6 +238,13 @@ namespace FStreak.Infrastructure.Data
                 .WithMany(m => m.Reactions)
                 .HasForeignKey(sr => sr.MessageId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure Lesson relationships
+            modelBuilder.Entity<Lesson>()
+                .HasOne(l => l.CreatedBy)
+                .WithMany()
+                .HasForeignKey(l => l.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
