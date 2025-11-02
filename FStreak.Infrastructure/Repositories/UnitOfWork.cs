@@ -20,7 +20,7 @@ namespace FStreak.Infrastructure.Repositories
         private IRepository<Badge> _badges;
         private IRepository<UserBadge> _userBadges;
         private IRepository<StudyWallPost> _studyWallPosts;
-        private IRepository<UserFriend> _userFriends;
+        private IUserFriendRepository _userFriends;
         private IRepository<Reaction> _reactions;
         private IRepository<StudyRoom> _studyRooms;
         private IRepository<RoomUser> _roomUsers;
@@ -51,7 +51,7 @@ namespace FStreak.Infrastructure.Repositories
         public IRepository<Badge> Badges => _badges ??= new Repository<Badge>(_context);
         public IRepository<UserBadge> UserBadges => _userBadges ??= new Repository<UserBadge>(_context);
         public IRepository<StudyWallPost> StudyWallPosts => _studyWallPosts ??= new Repository<StudyWallPost>(_context);
-        public IRepository<UserFriend> UserFriends => _userFriends ??= new Repository<UserFriend>(_context);
+        public IRepository<UserFriend> UserFriends => _userFriends ??= new UserFriendRepository(_context);
         public IRepository<Reaction> Reactions => _reactions ??= new Repository<Reaction>(_context);
 
         // Thêm các repository mới

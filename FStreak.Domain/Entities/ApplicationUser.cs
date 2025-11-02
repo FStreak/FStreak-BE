@@ -39,7 +39,9 @@ namespace FStreak.Domain.Entities
 
         public int CurrentStreak { get; set; }
         public int LongestStreak { get; set; }
-        
+
+        public string? AvatarUrl { get; set; }
+
         [MaxLength(100)]
         public string? TimeZone { get; set; }
 

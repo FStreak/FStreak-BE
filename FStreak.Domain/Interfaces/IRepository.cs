@@ -11,5 +11,6 @@ namespace FStreak.Domain.Interfaces
         Task DeleteAsync(T entity);
         Task<bool> ExistsAsync(int id);
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+        IQueryable<T> GetQueryable();
     }
 }

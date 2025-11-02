@@ -208,6 +208,9 @@ namespace FStreak.Infrastructure.Data
                 .WithMany(m => m.Reactions)
                 .HasForeignKey(sr => sr.MessageId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PomodoroConfig>()
+                .HasNoKey();
         }
     }
 }

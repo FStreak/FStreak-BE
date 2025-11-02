@@ -53,5 +53,10 @@ namespace FStreak.Infrastructure.Repositories
             _context.Entry(entity).State = EntityState.Modified;
             await Task.CompletedTask;
         }
+
+        public virtual IQueryable<T> GetQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
     }
 }
