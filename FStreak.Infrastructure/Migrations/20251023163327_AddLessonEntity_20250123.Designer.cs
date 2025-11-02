@@ -4,6 +4,7 @@ using FStreak.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FStreak.Infrastructure.Migrations
 {
     [DbContext(typeof(FStreakDbContext))]
-    partial class FStreakDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251023163327_AddLessonEntity_20250123")]
+    partial class AddLessonEntity_20250123
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -312,14 +315,6 @@ namespace FStreak.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
-                    b.Property<string>("DocumentType")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("DocumentUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
                     b.Property<int>("DurationMinutes")
                         .HasColumnType("int");
 
@@ -336,10 +331,6 @@ namespace FStreak.Infrastructure.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("VideoUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
 
                     b.HasKey("Id");
 

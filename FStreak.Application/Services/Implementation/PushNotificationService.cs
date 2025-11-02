@@ -102,7 +102,7 @@ namespace FStreak.Application.Services.Implementation
                 {
                     try
                     {
-                        var pushSubscription = new PushSubscription(
+                        var pushSubscription = new WebPush.PushSubscription(
                             subscription.Endpoint,
                             subscription.P256dh,
                             subscription.Auth);
@@ -152,7 +152,7 @@ namespace FStreak.Application.Services.Implementation
                 {
                     try
                     {
-                        var pushSubscription = new PushSubscription(
+                        var pushSubscription = new WebPush.PushSubscription(
                             subscription.Endpoint,
                             subscription.P256dh,
                             subscription.Auth);
@@ -195,7 +195,7 @@ namespace FStreak.Application.Services.Implementation
                 }
 
                 var payload = JsonSerializer.Serialize(notification);
-                var pushSubscription = new PushSubscription(
+                var pushSubscription = new WebPush.PushSubscription(
                     subscription.Endpoint,
                     subscription.P256dh,
                     subscription.Auth);

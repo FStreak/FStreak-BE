@@ -34,7 +34,7 @@ namespace FStreak.Application.Services.Implementation
         }
 
         public async Task<(bool Succeeded, string Message, AuthResult Result)> RegisterUserAsync(
-            string email, string username, string firstName, string lastName, string password)
+            string email, string username, string firstName, string lastName, string password, string role)
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
             if (existingUser != null)
@@ -58,26 +58,28 @@ namespace FStreak.Application.Services.Implementation
                 return (false, string.Join(", ", result.Errors.Select(e => e.Description)), null);
             }
 
-            // Ensure User role exists and add user to it
-            if (!await _roleManager.RoleExistsAsync("User"))
+
+            // Gán role cho user (ưu tiên role truyền vào, mặc định là "User")
+            var roleToAssign = string.IsNullOrWhiteSpace(role) ? "User" : role;
+            if (!await _roleManager.RoleExistsAsync(roleToAssign))
             {
-                var roleResult = await _roleManager.CreateAsync(new ApplicationRole 
-                { 
-                    Name = "User",
-                    Description = "Regular user with basic access rights"
+                var roleResult = await _roleManager.CreateAsync(new ApplicationRole
+                {
+                    Name = roleToAssign,
+                    Description = $"Auto-created role: {roleToAssign}"
                 });
                 if (!roleResult.Succeeded)
                 {
                     await _userManager.DeleteAsync(user); // Rollback user creation
-                    return (false, "Error creating user role", null);
+                    return (false, $"Error creating role {roleToAssign}", null);
                 }
             }
 
-            var addToRoleResult = await _userManager.AddToRoleAsync(user, "User");
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, roleToAssign);
             if (!addToRoleResult.Succeeded)
             {
                 await _userManager.DeleteAsync(user); // Rollback user creation
-                return (false, "Error assigning user role", null);
+                return (false, $"Error assigning user role {roleToAssign}", null);
             }
 
             var authResult = await GenerateAuthenticationResultAsync(user);

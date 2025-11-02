@@ -33,6 +33,7 @@ namespace FStreak.Infrastructure.Repositories
         private IRepository<SessionParticipant> _sessionParticipants;
         private IRepository<SessionMessage> _sessionMessages;
         private IRepository<SessionReaction> _sessionReactions;
+        private ILessonRepository _lessons;
         private IPushSubscriptionRepository _pushSubscriptions;
 
         public UnitOfWork(FStreakDbContext context)
@@ -66,6 +67,9 @@ namespace FStreak.Infrastructure.Repositories
         public IRepository<SessionParticipant> SessionParticipants => _sessionParticipants ??= new SessionParticipantRepository(_context);
         public IRepository<SessionMessage> SessionMessages => _sessionMessages ??= new SessionMessageRepository(_context);
         public IRepository<SessionReaction> SessionReactions => _sessionReactions ??= new SessionReactionRepository(_context);
+
+        // Lesson repository
+        public ILessonRepository Lessons => _lessons ??= new LessonRepository(_context);
 
         // Push Notification repository
         public IPushSubscriptionRepository PushSubscriptions => _pushSubscriptions ??= new PushSubscriptionRepository(_context);
