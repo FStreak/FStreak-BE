@@ -185,6 +185,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IStudyRoomService, StudyRoomService>();
 builder.Services.AddScoped<IFriendService, FriendService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<IAchievementService, AchievementService>();
+builder.Services.AddScoped<IShopService, ShopService>();
 
 // -----------------------------
 // 5. API DOCS & MONITORING
