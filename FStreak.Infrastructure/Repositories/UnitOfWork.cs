@@ -35,6 +35,11 @@ namespace FStreak.Infrastructure.Repositories
         private IRepository<SessionReaction> _sessionReactions;
         private ILessonRepository _lessons;
         private IPushSubscriptionRepository _pushSubscriptions;
+        private IAchievementRepository _achievements;
+        private IRepository<UserAchievement> _userAchievements;
+        private IRepository<ShopItem> _shopItems;
+        private IRepository<ShopOrder> _shopOrders;
+        private IRepository<ShopOrderItem> _shopOrderItems;
 
         public UnitOfWork(FStreakDbContext context)
         {
@@ -73,6 +78,15 @@ namespace FStreak.Infrastructure.Repositories
 
         // Push Notification repository
         public IPushSubscriptionRepository PushSubscriptions => _pushSubscriptions ??= new PushSubscriptionRepository(_context);
+
+        // Achievement repositories
+        public IAchievementRepository Achievements => _achievements ??= new AchievementRepository(_context);
+        public IRepository<UserAchievement> UserAchievements => _userAchievements ??= new Repository<UserAchievement>(_context);
+
+        // Shop repositories
+        public IRepository<ShopItem> ShopItems => _shopItems ??= new Repository<ShopItem>(_context);
+        public IRepository<ShopOrder> ShopOrders => _shopOrders ??= new Repository<ShopOrder>(_context);
+        public IRepository<ShopOrderItem> ShopOrderItems => _shopOrderItems ??= new Repository<ShopOrderItem>(_context);
 
         public async Task<int> SaveChangesAsync()
         {

@@ -35,6 +35,23 @@ namespace FStreak.Application.Mapper
                 .ForMember(dest => dest.DocumentUrl, opt => opt.MapFrom(src => src.DocumentUrl))
                 .ForMember(dest => dest.VideoUrl, opt => opt.MapFrom(src => src.VideoUrl))
                 .ForMember(dest => dest.DocumentType, opt => opt.MapFrom(src => src.DocumentType));
+
+            // Achievement mappings
+            CreateMap<CreateAchievementDto, Achievement>();
+            CreateMap<Achievement, AchievementDto>();
+            CreateMap<UserAchievement, UserAchievementDto>()
+                .ForMember(dest => dest.Achievement, opt => opt.MapFrom(src => src.Achievement));
+
+            // Shop mappings
+            CreateMap<CreateShopItemDto, ShopItem>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => Enum.Parse<ShopItemType>(src.Type)));
+            CreateMap<ShopItem, ShopItemDto>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()));
+            CreateMap<ShopOrder, ShopOrderDto>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+                .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems));
+            CreateMap<ShopOrderItem, ShopOrderItemDto>()
+                .ForMember(dest => dest.ShopItem, opt => opt.MapFrom(src => src.ShopItem));
         }
     }
 }
