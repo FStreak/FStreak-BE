@@ -10,7 +10,7 @@ namespace FStreak.API.Controllers
 {
     [ApiController]
     [Route("api/admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,admin")]
     public class AdminController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
