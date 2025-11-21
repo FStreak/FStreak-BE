@@ -121,23 +121,12 @@ builder.Services.AddAuthentication(options =>
 // 3. INFRASTRUCTURE SERVICES
 // -----------------------------
 
-// Add CORS
+// Add CORS (allow all origins for cross-browser compatibility)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("DefaultCorsPolicy", policy =>
     {
-        policy.SetIsOriginAllowed(_ => true) // Allow any origin for development
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials(); // Required for SignalR WebSockets
-    });
-
-    options.AddPolicy("AllowSpecific", policy =>
-    {
-        policy.WithOrigins(
-            "http://localhost:3000", 
-            "http://localhost:5173", 
-            "https://fstreak.vercel.app")
+        policy.SetIsOriginAllowed(_ => true)
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
@@ -238,8 +227,7 @@ var app = builder.Build();
         c.RoutePrefix = string.Empty;
     });
 
-//app.UseCors("AllowSpecific"); // Use for production
-app.UseCors("AllowAll"); // Use for development (allows SignalR WebSockets)
+app.UseCors("DefaultCorsPolicy");
 
 // Configure middleware pipeline
 app.UseHttpsRedirection();
