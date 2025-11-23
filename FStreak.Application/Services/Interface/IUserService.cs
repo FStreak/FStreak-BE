@@ -10,5 +10,6 @@ namespace FStreak.Application.Services.Interface
     public interface IUserService
     {
         Task<IEnumerable<ApplicationUser>> GetAllAsync();
+        Task<ApplicationUser> GetByUserIdAsync(string id);
     }
 }

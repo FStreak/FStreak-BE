@@ -1,15 +1,16 @@
 ﻿using DotNetEnv;
-using FStreak.Domain.Interfaces;
+using FStreak.API.Hubs;
+using FStreak.Application.Configuration;
+using FStreak.Application.Services.Implementation;
+using FStreak.Application.Services.Interface;
 using FStreak.Domain.Entities;
+using FStreak.Domain.Interfaces;
 using FStreak.Infrastructure.Data;
 using FStreak.Infrastructure.Repositories;
-using FStreak.Application.Services.Interface;
-using FStreak.Application.Services.Implementation;
-using FStreak.API.Hubs;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -172,6 +173,17 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // 4. APPLICATION SERVICES
 // -----------------------------
 
+// Configure Cloudinary Settings
+builder.Services.Configure<CloudinarySettings>(options =>
+{
+    options.CloudName = Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME")
+        ?? builder.Configuration["Cloudinary:CloudName"] ?? "";
+    options.ApiKey = Environment.GetEnvironmentVariable("CLOUDINARY_API_KEY")
+        ?? builder.Configuration["Cloudinary:ApiKey"] ?? "";
+    options.ApiSecret = Environment.GetEnvironmentVariable("CLOUDINARY_API_SECRET")
+        ?? builder.Configuration["Cloudinary:ApiSecret"] ?? "";
+});
+
 // Add Unit of Work and Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -185,6 +197,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IStudyRoomService, StudyRoomService>();
 builder.Services.AddScoped<IFriendService, FriendService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 // -----------------------------
 // 5. API DOCS & MONITORING

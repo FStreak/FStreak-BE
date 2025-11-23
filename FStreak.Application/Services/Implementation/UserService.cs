@@ -12,14 +12,21 @@ namespace FStreak.Application.Services.Implementation
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public UserService(IUnitOfWork unitOfWork)
+        private readonly IUserRepository _userRepo;
+        public UserService(IUnitOfWork unitOfWork, IUserRepository userRepo)
         {
             _unitOfWork = unitOfWork;
+            _userRepo = userRepo;
         }
 
         public async Task<IEnumerable<ApplicationUser>> GetAllAsync()
         {
              return await _unitOfWork.Users.GetAllAsync();
+        }
+
+        public async Task<ApplicationUser> GetByUserIdAsync(string id)
+        {
+            return await _userRepo.GetByIdAsync(id);
         }
     }
 }

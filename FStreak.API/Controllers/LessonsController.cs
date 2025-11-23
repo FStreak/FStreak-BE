@@ -12,22 +12,22 @@ namespace FStreak.API.Controllers
     public class LessonsController : ControllerBase
     {
         private readonly ILessonService _lessonService;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public LessonsController(ILessonService lessonService)
+        public LessonsController(ILessonService lessonService, ICloudinaryService cloudinaryService)
         {
             _lessonService = lessonService;
+            _cloudinaryService = cloudinaryService;
         }
 
         [HttpPost]
         [Authorize(Roles = "Teacher")]
-        [RequestSizeLimit(50_000_000)] // 50MB
-        public async Task<IActionResult> CreateLesson([FromForm] FStreak.Application.DTOs.LessonCreateWithFileDto dto)
+        [RequestSizeLimit(100_000_000)] // 100MB
+        public async Task<IActionResult> CreateLesson([FromForm] LessonCreateWithFileDto dto)
         {
-            var teacherId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var teacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(teacherId))
-            {
                 return Unauthorized("User ID not found");
-            }
 
             var createDto = new LessonCreateDto
             {
@@ -38,34 +38,30 @@ namespace FStreak.API.Controllers
                 IsPublished = dto.IsPublished
             };
 
-            // Xử lý upload file tài liệu
+            // Upload document to Cloudinary
             if (dto.DocumentFile != null && dto.DocumentFile.Length > 0)
             {
-                createDto.DocumentUrl = $"/uploads/docs/{Guid.NewGuid()}_{dto.DocumentFile.FileName}";
-                createDto.DocumentType = System.IO.Path.GetExtension(dto.DocumentFile.FileName)?.TrimStart('.').ToLower();
-                var path = Path.Combine("wwwroot/uploads/docs", Path.GetFileName(createDto.DocumentUrl));
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    await dto.DocumentFile.CopyToAsync(stream);
-                }
+                var docResult = await _cloudinaryService.UploadDocumentAsync(dto.DocumentFile, "lessons/documents");
+                if (!docResult.Succeeded)
+                    return BadRequest($"Document upload failed: {docResult.Error}");
+
+                createDto.DocumentUrl = docResult.Data!.SecureUrl;
+                createDto.DocumentType = docResult.Data.Format;
             }
 
-            // Xử lý upload file video
+            // Upload video to Cloudinary
             if (dto.VideoFile != null && dto.VideoFile.Length > 0)
             {
-                createDto.VideoUrl = $"/uploads/videos/{Guid.NewGuid()}_{dto.VideoFile.FileName}";
-                var path = Path.Combine("wwwroot/uploads/videos", Path.GetFileName(createDto.VideoUrl));
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    await dto.VideoFile.CopyToAsync(stream);
-                }
+                var videoResult = await _cloudinaryService.UploadVideoAsync(dto.VideoFile, "lessons/videos");
+                if (!videoResult.Succeeded)
+                    return BadRequest($"Video upload failed: {videoResult.Error}");
+
+                createDto.VideoUrl = videoResult.Data!.SecureUrl;
             }
 
             var result = await _lessonService.CreateLessonAsync(createDto, teacherId);
             if (!result.Succeeded)
-            {
                 return BadRequest(result.Error);
-            }
 
             return CreatedAtAction(nameof(GetLesson), new { id = result.Data!.Id }, result.Data);
         }
@@ -75,9 +71,7 @@ namespace FStreak.API.Controllers
         {
             var result = await _lessonService.GetLessonByIdAsync(id);
             if (!result.Succeeded)
-            {
                 return NotFound(result.Error);
-            }
 
             return Ok(result.Data);
         }
@@ -108,11 +102,9 @@ namespace FStreak.API.Controllers
             Guid id,
             [FromForm] FStreak.Application.DTOs.LessonUpdateWithFileDto dto)
         {
-            var teacherId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var teacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(teacherId))
-            {
                 return Unauthorized("User ID not found");
-            }
 
             var updateDto = new LessonUpdateDto
             {
@@ -123,27 +115,25 @@ namespace FStreak.API.Controllers
                 IsPublished = dto.IsPublished
             };
 
-            // Xử lý upload file tài liệu
+            // Upload document to Cloudinary
             if (dto.DocumentFile != null && dto.DocumentFile.Length > 0)
             {
-                updateDto.DocumentUrl = $"/uploads/docs/{Guid.NewGuid()}_{dto.DocumentFile.FileName}";
-                updateDto.DocumentType = System.IO.Path.GetExtension(dto.DocumentFile.FileName)?.TrimStart('.').ToLower();
-                var path = Path.Combine("wwwroot/uploads/docs", Path.GetFileName(updateDto.DocumentUrl));
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    await dto.DocumentFile.CopyToAsync(stream);
-                }
+                var docResult = await _cloudinaryService.UploadDocumentAsync(dto.DocumentFile, "lessons/documents");
+                if (!docResult.Succeeded)
+                    return BadRequest($"Document upload failed: {docResult.Error}");
+
+                updateDto.DocumentUrl = docResult.Data!.SecureUrl;
+                updateDto.DocumentType = docResult.Data.Format;
             }
 
-            // Xử lý upload file video
+            // Upload video to Cloudinary
             if (dto.VideoFile != null && dto.VideoFile.Length > 0)
             {
-                updateDto.VideoUrl = $"/uploads/videos/{Guid.NewGuid()}_{dto.VideoFile.FileName}";
-                var path = Path.Combine("wwwroot/uploads/videos", Path.GetFileName(updateDto.VideoUrl));
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    await dto.VideoFile.CopyToAsync(stream);
-                }
+                var videoResult = await _cloudinaryService.UploadVideoAsync(dto.VideoFile, "lessons/videos");
+                if (!videoResult.Succeeded)
+                    return BadRequest($"Video upload failed: {videoResult.Error}");
+
+                updateDto.VideoUrl = videoResult.Data!.SecureUrl;
             }
 
             var result = await _lessonService.UpdateLessonAsync(id, updateDto, teacherId);
@@ -159,11 +149,9 @@ namespace FStreak.API.Controllers
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> DeleteLesson(Guid id)
         {
-            var teacherId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var teacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(teacherId))
-            {
                 return Unauthorized("User ID not found");
-            }
 
             var result = await _lessonService.DeleteLessonAsync(id, teacherId);
             if (!result.Succeeded)

@@ -19,5 +19,14 @@ namespace FStreak.API.Controllers
             var users = await _userService.GetAllAsync();
             return Ok(users);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById(string id)
+        {
+            var user = await _userService.GetByUserIdAsync(id);
+            if (user == null)
+                return NotFound();
+            return Ok(user);
+        }
     }
 }
