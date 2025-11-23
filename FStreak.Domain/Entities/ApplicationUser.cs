@@ -23,6 +23,7 @@ namespace FStreak.Domain.Entities
             SessionParticipations = new HashSet<SessionParticipant>();
             SessionMessages = new HashSet<SessionMessage>();
             SessionReactions = new HashSet<SessionReaction>();
+            UserAchievements = new HashSet<UserAchievement>();
         }
 
         [Required]
@@ -64,5 +65,6 @@ namespace FStreak.Domain.Entities
         public virtual ICollection<SessionParticipant> SessionParticipations { get; set; }
         public virtual ICollection<SessionMessage> SessionMessages { get; set; }
         public virtual ICollection<SessionReaction> SessionReactions { get; set; }
+        public virtual ICollection<UserAchievement> UserAchievements { get; set; }
     }
 }

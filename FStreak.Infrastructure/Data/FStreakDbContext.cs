@@ -37,6 +37,11 @@ namespace FStreak.Infrastructure.Data
         public DbSet<SessionMessage> SessionMessages { get; set; }
         public DbSet<SessionReaction> SessionReactions { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
+        public DbSet<Achievement> Achievements { get; set; }
+        public DbSet<UserAchievement> UserAchievements { get; set; }
+        public DbSet<ShopItem> ShopItems { get; set; }
+        public DbSet<ShopOrder> ShopOrders { get; set; }
+        public DbSet<ShopOrderItem> ShopOrderItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -244,6 +249,57 @@ namespace FStreak.Infrastructure.Data
                 .HasOne(l => l.CreatedBy)
                 .WithMany()
                 .HasForeignKey(l => l.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Achievement relationships
+            modelBuilder.Entity<Achievement>()
+                .HasIndex(a => a.Code)
+                .IsUnique();
+
+            modelBuilder.Entity<UserAchievement>()
+                .HasOne(ua => ua.User)
+                .WithMany(u => u.UserAchievements)
+                .HasForeignKey(ua => ua.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserAchievement>()
+                .HasOne(ua => ua.Achievement)
+                .WithMany(a => a.UserAchievements)
+                .HasForeignKey(ua => ua.AchievementId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure unique constraint: User can only have one instance of each achievement
+            modelBuilder.Entity<UserAchievement>()
+                .HasIndex(ua => new { ua.UserId, ua.AchievementId })
+                .IsUnique();
+
+            // Configure ShopItem relationships
+            modelBuilder.Entity<ShopItem>()
+                .HasIndex(si => si.Code)
+                .IsUnique();
+
+            // Configure ShopOrder relationships
+            modelBuilder.Entity<ShopOrder>()
+                .HasOne(so => so.User)
+                .WithMany()
+                .HasForeignKey(so => so.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ShopOrder>()
+                .HasIndex(so => so.OrderNumber)
+                .IsUnique();
+
+            // Configure ShopOrderItem relationships
+            modelBuilder.Entity<ShopOrderItem>()
+                .HasOne(soi => soi.Order)
+                .WithMany(so => so.OrderItems)
+                .HasForeignKey(soi => soi.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ShopOrderItem>()
+                .HasOne(soi => soi.ShopItem)
+                .WithMany(si => si.OrderItems)
+                .HasForeignKey(soi => soi.ShopItemId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

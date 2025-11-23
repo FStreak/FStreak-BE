@@ -38,6 +38,15 @@ namespace FStreak.Domain.Interfaces
         // Push Notification
         IPushSubscriptionRepository PushSubscriptions { get; }
 
+        // Achievement Repositories
+        IAchievementRepository Achievements { get; }
+        IRepository<UserAchievement> UserAchievements { get; }
+
+        // Shop Repositories
+        IRepository<ShopItem> ShopItems { get; }
+        IRepository<ShopOrder> ShopOrders { get; }
+        IRepository<ShopOrderItem> ShopOrderItems { get; }
+
         Task<int> SaveChangesAsync();
     }
 }
