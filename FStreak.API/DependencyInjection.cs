@@ -40,8 +40,9 @@ namespace FStreak.API
                 var unitOfWork = sp.GetRequiredService<IUnitOfWork>();
                 var configuration = sp.GetRequiredService<IConfiguration>();
                 var cache = sp.GetRequiredService<IDistributedCache>();
+                var achievementService = sp.GetRequiredService<IAchievementService>();
                 var notifier = sp.GetService<IStreakRealtimeNotifier>();
-                return new StreakService(logger, unitOfWork, configuration, cache, notifier);
+                return new StreakService(logger, unitOfWork, configuration, cache, achievementService, notifier);
             });
             services.AddScoped<IReminderService, ReminderService>();
             services.AddScoped<IReminderRepository, ReminderRepository>();
