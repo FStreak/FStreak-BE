@@ -309,13 +309,22 @@ namespace FStreak.API.Controllers
 
         #region Shop Management
 
-        /// <summary>
-        /// Create a shop item (Admin only)
-        /// </summary>
         [HttpPost("shop/items")]
         [ProducesResponseType(typeof(ShopItemDto), 201)]
-        public async Task<IActionResult> CreateShopItem([FromBody] CreateShopItemDto dto)
+        public async Task<IActionResult> CreateShopItem([FromForm] CreateShopItemDto dto)
         {
+            if (dto.Image != null && dto.Image.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "shop");
+                Directory.CreateDirectory(uploadsFolder);
+                var fileName = Guid.NewGuid() + Path.GetExtension(dto.Image.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await dto.Image.CopyToAsync(stream);
+                }
+            }
+
             var result = await _shopService.CreateShopItemAsync(dto);
             if (!result.Succeeded)
             {
