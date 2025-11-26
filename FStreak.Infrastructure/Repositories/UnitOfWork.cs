@@ -40,6 +40,7 @@ namespace FStreak.Infrastructure.Repositories
         private IRepository<ShopItem> _shopItems;
         private IRepository<ShopOrder> _shopOrders;
         private IRepository<ShopOrderItem> _shopOrderItems;
+        private IRepository<Payment> payments;
 
         public UnitOfWork(FStreakDbContext context)
         {
@@ -59,6 +60,7 @@ namespace FStreak.Infrastructure.Repositories
         public IRepository<StudyWallPost> StudyWallPosts => _studyWallPosts ??= new Repository<StudyWallPost>(_context);
         public IRepository<UserFriend> UserFriends => _userFriends ??= new UserFriendRepository(_context);
         public IRepository<Reaction> Reactions => _reactions ??= new Repository<Reaction>(_context);
+        public IRepository<Payment> Payments => payments ??= new Repository<Payment>(_context);
 
         // Thêm các repository mới
         public IRepository<StudyRoom> StudyRooms => _studyRooms ??= new Repository<StudyRoom>(_context);

@@ -29,6 +29,7 @@ namespace FStreak.Infrastructure.Data
         public DbSet<Reminder> Reminders { get; set; }
         public DbSet<PushSubscription> PushSubscriptions { get; set; }
         public DbSet<UserStreakHistory> UserStreakHistories { get; set; }
+        public DbSet<Payment> Payments { get; set; }
 
         // Group Study related DbSets
         public DbSet<GroupMember> GroupMembers { get; set; }

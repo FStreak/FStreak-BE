@@ -40,6 +40,14 @@ var connectionString = $"server={Environment.GetEnvironmentVariable("DB_SERVER")
 
 builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
 
+// Load PayOS environment variables
+builder.Configuration["PAYOS_CLIENT_ID"] = Environment.GetEnvironmentVariable("PAYOS_CLIENT_ID") ?? "";
+builder.Configuration["PAYOS_API_KEY"] = Environment.GetEnvironmentVariable("PAYOS_API_KEY") ?? "";
+builder.Configuration["PAYOS_CHECK_SUM_KEY"] = Environment.GetEnvironmentVariable("PAYOS_CHECK_SUM_KEY") ?? "";
+builder.Configuration["PAYOS_RETURN_URL"] = Environment.GetEnvironmentVariable("PAYOS_RETURN_URL") ?? "https://fstreak.vercel.app/payment/success";
+builder.Configuration["PAYOS_CANCEL_URL"] = Environment.GetEnvironmentVariable("PAYOS_CANCEL_URL") ?? "https://fstreak.vercel.app/payment/cancel";
+builder.Configuration["PAYOS_WEBHOOK_URL"] = Environment.GetEnvironmentVariable("PAYOS_WEBHOOK_URL") ?? "https://fstreak-be.onrender.com/api/PayOS/webhook";
+
 // -----------------------------
 // 2. CORE SERVICES
 // -----------------------------
@@ -189,7 +197,7 @@ builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddScoped<IAchievementService, AchievementService>();
 builder.Services.AddScoped<IShopService, ShopService>();
-
+builder.Services.AddScoped<IPayOSService, PayOSService>();
 
 // -----------------------------
 // 5. API DOCS & MONITORING

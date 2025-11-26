@@ -46,6 +46,7 @@ namespace FStreak.Domain.Interfaces
         IRepository<ShopItem> ShopItems { get; }
         IRepository<ShopOrder> ShopOrders { get; }
         IRepository<ShopOrderItem> ShopOrderItems { get; }
+        IRepository<Payment> Payments { get; }
 
         Task<int> SaveChangesAsync();
     }
