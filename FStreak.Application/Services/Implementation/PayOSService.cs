@@ -263,6 +263,43 @@ namespace FStreak.Application.Services.Implementation
                 return false;
             }
         }
+        public async Task<List<PaymentHistoryDto>> GetAllPaymentsAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Getting all payments");
+
+                var allPayments = await _unitOfWork.Payments.GetAllAsync();
+
+                _logger.LogInformation("Total payments found: {Count}", allPayments.Count());
+
+                var result = allPayments
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Select(p => new PaymentHistoryDto
+                    {
+                        Id = p.Id,
+                        UserId = p.UserId,
+                        UserName = p.User?.UserName ?? "",
+                        OrderCode = p.OrderCode,
+                        Amount = p.Amount,
+                        PlanId = p.PlanId,
+                        Status = p.Status,
+                        CreatedAt = p.CreatedAt,
+                        CompleteAt = p.CompleteAt == default ? null : (DateTime?)p.CompleteAt,
+                        TransactionReference = p.TransactionReference
+                    })
+                    .ToList();
+
+                _logger.LogInformation("Returning {Count} payment records", result.Count);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting all payments");
+                throw;
+            }
+        }
 
         public async Task<List<PaymentHistoryDto>> GetUserPaymentHistoryAsync(string userId)
         {
@@ -280,7 +317,7 @@ namespace FStreak.Application.Services.Implementation
                     PlanId = p.PlanId,
                     Status = p.Status,
                     CreatedAt = p.CreatedAt,
-                    CompletedAt = p.CompleteAt,
+                    CompleteAt = p.CompleteAt,
                     TransactionReference = p.TransactionReference
                 }).ToList();
         }

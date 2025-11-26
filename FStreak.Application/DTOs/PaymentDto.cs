@@ -61,7 +61,7 @@ namespace FStreak.Application.DTOs
         public string PlanId { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
-        public DateTime? CompletedAt { get; set; }
+        public DateTime? CompleteAt { get; set; }
         public string? TransactionReference { get; set; }
     }
 }

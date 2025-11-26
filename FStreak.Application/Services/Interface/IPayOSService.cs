@@ -14,6 +14,7 @@ namespace FStreak.Application.Services.Interface
         Task<bool> VerifyWebhookSignatureAsync(string webhookData, string signature);
         Task<bool> HandleWebhookAsync(PayOSWebhookDto webhook);
         Task<List<PaymentHistoryDto>> GetUserPaymentHistoryAsync(string userId);
+        Task<List<PaymentHistoryDto>> GetAllPaymentsAsync();
     }
     
 }

@@ -247,6 +247,7 @@ var app = builder.Build();
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "F-Streak API V1");
         c.RoutePrefix = string.Empty;
+        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
     });
 
 app.UseCors("DefaultCorsPolicy");

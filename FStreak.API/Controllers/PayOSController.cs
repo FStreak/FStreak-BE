@@ -22,6 +22,28 @@ public class PayOSController : ControllerBase
     }
 
     /// <summary>
+    /// Get all payments (Admin only)
+    /// </summary>
+    [HttpGet]
+    [Authorize(Roles = "admin")]
+    public async Task<IActionResult> GetAllPayments()
+    {
+        try
+        {
+            _logger.LogInformation("Admin requesting all payment history");
+
+            var history = await _payOSService.GetAllPaymentsAsync();
+
+            return Ok(history);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting all payment history");
+            return StatusCode(500, new { message = "Error getting payment history", error = ex.Message });
+        }
+    }
+
+    /// <summary>
     /// Create payment link for a plan
     /// </summary>
     [HttpPost("create-payment")]
@@ -70,6 +92,7 @@ public class PayOSController : ControllerBase
     /// PayOS webhook endpoint - handles payment confirmation
     /// </summary>
     [HttpPost("webhook")]
+    [HttpPut("webhook")]
     [AllowAnonymous]
     public async Task<IActionResult> HandleWebhook([FromBody] PayOSWebhookDto webhook)
     {
@@ -107,7 +130,7 @@ public class PayOSController : ControllerBase
     /// <summary>
     /// Get user's payment history
     /// </summary>
-    [HttpGet("history")]
+    [HttpGet("me")]
     [Authorize]
     public async Task<IActionResult> GetPaymentHistory()
     {
