@@ -130,5 +130,20 @@ namespace FStreak.Application.Services.Implementation
                 return Result<bool>.Failure($"Failed to delete lesson: {ex.Message}");
             }
         }
+
+        public async Task<Result<IEnumerable<LessonReadDto>>> GetAllLessonsAsync()
+        {
+            try
+            {
+                var lessons = await _unitOfWork.Lessons.GetAllAsync();
+                var result = _mapper.Map<IEnumerable<LessonReadDto>>(lessons);
+
+                return Result<IEnumerable<LessonReadDto>>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return Result<IEnumerable<LessonReadDto>>.Failure($"Failed to get all lessons: {ex.Message}");
+            }
+        }
     }
 }

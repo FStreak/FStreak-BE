@@ -10,5 +10,6 @@ namespace FStreak.Application.Services.Interface
         Task<Result<IEnumerable<LessonReadDto>>> GetLessonsByTeacherAsync(string teacherId);
         Task<Result<LessonReadDto>> UpdateLessonAsync(Guid id, LessonUpdateDto updateDto, string teacherId);
         Task<Result<bool>> DeleteLessonAsync(Guid id, string teacherId);
+        Task<Result<IEnumerable<LessonReadDto>>> GetAllLessonsAsync();
     }
 }

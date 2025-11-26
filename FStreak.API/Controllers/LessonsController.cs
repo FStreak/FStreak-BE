@@ -20,6 +20,18 @@ namespace FStreak.API.Controllers
             _cloudinaryService = cloudinaryService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllLessons()
+        {
+            var result = await _lessonService.GetAllLessonsAsync();
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Data);
+        }
+
         [HttpPost]
         [Authorize(Roles = "Teacher")]
         [RequestSizeLimit(100_000_000)] // 100MB
