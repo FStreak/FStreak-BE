@@ -39,7 +39,7 @@ namespace FStreak.Domain.Entities
         public bool IsActive { get; set; } = true;
 
         [MaxLength(2000)]
-        public string? MetadataJson { get; set; }
+        public string? Image { get; set; }
 
         // Navigation properties
         public virtual ICollection<ShopOrderItem> OrderItems { get; set; } = new HashSet<ShopOrderItem>();

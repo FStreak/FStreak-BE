@@ -11,7 +11,7 @@ namespace FStreak.Application.DTOs
         public int PricePoints { get; set; }
         public int Stock { get; set; }
         public bool IsActive { get; set; }
-        public string? MetadataJson { get; set; }
+        // public string? MetadataJson { get; set; } // Removed, replaced by Image
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
@@ -49,8 +49,10 @@ namespace FStreak.Application.DTOs
         public int PricePoints { get; set; }
         public int Stock { get; set; }
         public bool IsActive { get; set; } = true;
-        public string? MetadataJson { get; set; }
+        // public string? Image { get; set; } // Removed, replaced by IFormFile for upload
+        public Microsoft.AspNetCore.Http.IFormFile? Image { get; set; }
     }
+
 
     public class UpdateShopItemDto
     {
@@ -60,7 +62,8 @@ namespace FStreak.Application.DTOs
         public int? PricePoints { get; set; }
         public int? Stock { get; set; }
         public bool? IsActive { get; set; }
-        public string? MetadataJson { get; set; }
+        // public string? MetadataJson { get; set; } // Removed, replaced by Image
+        public string? Image { get; set; }
     }
 
     public class CreateOrderDto
