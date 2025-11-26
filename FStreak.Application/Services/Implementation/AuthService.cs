@@ -20,17 +20,20 @@ namespace FStreak.Application.Services.Implementation
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly FStreakDbContext _context;
+        private readonly IAchievementService _achievementService;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IConfiguration configuration,
-            FStreakDbContext context)
+            FStreakDbContext context,
+            IAchievementService achievementService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _context = context;
+            _achievementService = achievementService;
         }
 
         public async Task<(bool Succeeded, string Message, AuthResult Result)> RegisterUserAsync(
@@ -81,6 +84,10 @@ namespace FStreak.Application.Services.Implementation
                 await _userManager.DeleteAsync(user); // Rollback user creation
                 return (false, $"Error assigning user role {roleToAssign}", null);
             }
+
+            // Claim registration achievement if exists
+            // You may want to use a constant or config for the code, e.g. "register_success"
+            await _achievementService.AwardAchievementAsync(user.Id, "register_success");
 
             var authResult = await GenerateAuthenticationResultAsync(user);
             return (true, "User registered successfully", authResult);

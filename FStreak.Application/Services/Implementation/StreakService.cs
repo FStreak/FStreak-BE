@@ -24,6 +24,7 @@ namespace FStreak.Application.Services.Implementation
         private readonly IConfiguration _configuration;
         private readonly IDistributedCache _cache;
         private readonly ILogger<StreakService> _logger;
+        private readonly IAchievementService _achievementService;
         private const int DEFAULT_STREAK_THRESHOLD_MINUTES = 25;
         private const string CACHE_KEY_PREFIX = "streak_";
         private const int CACHE_EXPIRY_HOURS = 24;
@@ -34,12 +35,14 @@ namespace FStreak.Application.Services.Implementation
             IUnitOfWork unitOfWork,
             IConfiguration configuration,
             IDistributedCache cache,
+            IAchievementService achievementService,
             IStreakRealtimeNotifier? realtimeNotifier = null)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _cache = cache;
+            _achievementService = achievementService;
             _realtimeNotifier = realtimeNotifier;
         }
 
@@ -117,6 +120,11 @@ namespace FStreak.Application.Services.Implementation
                         _logger.LogInformation("User {UserId} needs {Required} minutes but only has {Total} minutes", 
                             userId, requiredMinutes, totalMinutes);
                         return Result<StreakInfoDto>.Failure($"Need at least {requiredMinutes} minutes of study time");
+                    }
+                    // Claim achievement if studied at least 10 minutes
+                    if (totalMinutes >= 10)
+                    {
+                        await _achievementService.AwardAchievementAsync(userId, "study_10min");
                     }
                 }
 
