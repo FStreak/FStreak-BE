@@ -2,6 +2,7 @@
 using FStreak.Application.Services.Interface;
 using FStreak.Domain.Entities;
 using FStreak.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PayOS;
@@ -269,17 +270,21 @@ namespace FStreak.Application.Services.Implementation
             {
                 _logger.LogInformation("Getting all payments");
 
-                var allPayments = await _unitOfWork.Payments.GetAllAsync();
+                // Use DbContext directly to include User navigation property
+                var allPayments = await _unitOfWork.Payments
+                    .GetQueryable()
+                    .Include(p => p.User)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .ToListAsync();
 
-                _logger.LogInformation("Total payments found: {Count}", allPayments.Count());
+                _logger.LogInformation("Total payments found: {Count}", allPayments.Count);
 
                 var result = allPayments
-                    .OrderByDescending(p => p.CreatedAt)
                     .Select(p => new PaymentHistoryDto
                     {
                         Id = p.Id,
                         UserId = p.UserId,
-                        UserName = p.User?.UserName ?? "",
+                        UserName = p.User?.UserName ?? p.User?.Email ?? "Unknown",
                         OrderCode = p.OrderCode,
                         Amount = p.Amount,
                         PlanId = p.PlanId,
@@ -303,23 +308,39 @@ namespace FStreak.Application.Services.Implementation
 
         public async Task<List<PaymentHistoryDto>> GetUserPaymentHistoryAsync(string userId)
         {
-            var allPayments = await _unitOfWork.Payments.GetAllAsync();
-            return allPayments
-                .Where(p => p.UserId == userId)
-                .OrderByDescending(p => p.CreatedAt)
-                .Select(p => new PaymentHistoryDto
-                {
-                    Id = p.Id,
-                    UserId = p.UserId,
-                    UserName = p.User?.UserName ?? "",
-                    OrderCode = p.OrderCode,
-                    Amount = p.Amount,
-                    PlanId = p.PlanId,
-                    Status = p.Status,
-                    CreatedAt = p.CreatedAt,
-                    CompleteAt = p.CompleteAt,
-                    TransactionReference = p.TransactionReference
-                }).ToList();
+            try
+            {
+                _logger.LogInformation("Getting payment history for user: {UserId}", userId);
+
+                var userPayments = await _unitOfWork.Payments
+                    .GetQueryable()
+                    .Include(p => p.User)
+                    .Where(p => p.UserId == userId)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .ToListAsync();
+
+                _logger.LogInformation("Found {Count} payments for user {UserId}", userPayments.Count, userId);
+
+                return userPayments
+                    .Select(p => new PaymentHistoryDto
+                    {
+                        Id = p.Id,
+                        UserId = p.UserId,
+                        UserName = p.User?.UserName ?? p.User?.Email ?? "Unknown",
+                        OrderCode = p.OrderCode,
+                        Amount = p.Amount,
+                        PlanId = p.PlanId,
+                        Status = p.Status,
+                        CreatedAt = p.CreatedAt,
+                        CompleteAt = p.CompleteAt == default ? null : (DateTime?)p.CompleteAt,
+                        TransactionReference = p.TransactionReference
+                    }).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting payment history for user {UserId}", userId);
+                throw;
+            }
         }
 
         private static string ComputeHmacSha256(string data, string key)

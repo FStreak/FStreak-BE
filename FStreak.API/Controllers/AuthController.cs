@@ -13,12 +13,14 @@ namespace FStreak.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IAchievementService _achievementService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AuthController(IAuthService authService, UserManager<ApplicationUser> userManager)
+        public AuthController(IAuthService authService, UserManager<ApplicationUser> userManager, IAchievementService achievementService)
         {
             _authService = authService;
             _userManager = userManager;
+            _achievementService = achievementService;
         }
 
         /// <summary>
@@ -60,6 +62,7 @@ namespace FStreak.API.Controllers
             }
 
             var roles = await _userManager.GetRolesAsync(result.Result.User);
+
             return Ok(new AuthResponseDto
             {
                 Succeeded = true,

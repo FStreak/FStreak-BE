@@ -85,9 +85,9 @@ namespace FStreak.Application.Services.Implementation
                 return (false, $"Error assigning user role {roleToAssign}", null);
             }
 
-            // Claim registration achievement if exists
-            // You may want to use a constant or config for the code, e.g. "register_success"
-            await _achievementService.AwardAchievementAsync(user.Id, "register_success");
+            // Auto gán achievement "Chào mừng" khi đăng ký
+            Guid welcomeAchievementId = Guid.Parse("7c437fc2-1843-4b8c-847c-b3353ea5161b");
+            await _achievementService.ClaimAchievementAsync(user.Id, welcomeAchievementId);
 
             var authResult = await GenerateAuthenticationResultAsync(user);
             return (true, "User registered successfully", authResult);

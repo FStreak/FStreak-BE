@@ -56,20 +56,38 @@ namespace FStreak.Application.Services.Implementation
             try
             {
                 var userAchievement = await _unitOfWork.Achievements.GetUserAchievementAsync(userId, achievementId);
+                
+                // Nếu chưa có achievement này, tạo mới
                 if (userAchievement == null)
                 {
-                    return Result<UserAchievementDto>.Failure("User achievement not found");
-                }
+                    var achievement = await _unitOfWork.Achievements.GetByIdAsync(achievementId);
+                    if (achievement == null || !achievement.IsActive)
+                    {
+                        return Result<UserAchievementDto>.Failure("Achievement not found or inactive");
+                    }
 
-                if (userAchievement.IsClaimed)
+                    userAchievement = new UserAchievement
+                    {
+                        UserId = userId,
+                        AchievementId = achievementId,
+                        IsClaimed = true,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    };
+
+                    await _unitOfWork.UserAchievements.AddAsync(userAchievement);
+                }
+                else if (userAchievement.IsClaimed)
                 {
                     return Result<UserAchievementDto>.Failure("Achievement already claimed");
                 }
+                else
+                {
+                    userAchievement.IsClaimed = true;
+                    userAchievement.UpdatedAt = DateTime.UtcNow;
+                    await _unitOfWork.UserAchievements.UpdateAsync(userAchievement);
+                }
 
-                userAchievement.IsClaimed = true;
-                userAchievement.UpdatedAt = DateTime.UtcNow;
-
-                await _unitOfWork.UserAchievements.UpdateAsync(userAchievement);
                 await _unitOfWork.SaveChangesAsync();
 
                 var dto = _mapper.Map<UserAchievementDto>(userAchievement);
