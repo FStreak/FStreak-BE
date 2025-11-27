@@ -261,7 +261,6 @@ namespace FStreak.Application.Services.Implementation
                     PricePoints = dto.PricePoints,
                     Stock = dto.Stock,
                     IsActive = dto.IsActive,
-                    MetadataJson = dto.MetadataJson,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
@@ -298,7 +297,7 @@ namespace FStreak.Application.Services.Implementation
                 if (dto.PricePoints.HasValue) shopItem.PricePoints = dto.PricePoints.Value;
                 if (dto.Stock.HasValue) shopItem.Stock = dto.Stock.Value;
                 if (dto.IsActive.HasValue) shopItem.IsActive = dto.IsActive.Value;
-                if (dto.MetadataJson != null) shopItem.MetadataJson = dto.MetadataJson;
+                if (dto.Image != null) shopItem.Image = dto.Image;
                 shopItem.UpdatedAt = DateTime.UtcNow;
 
                 await _unitOfWork.ShopItems.UpdateAsync(shopItem);
